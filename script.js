@@ -82,7 +82,26 @@ function closeModal() {
     if(video) video.pause();
     document.getElementById('modal').classList.add('hidden');
 }
+function openModal(data) {
+    // 1. Redirect for Feb 7
+    if(data.day === 7 && data.month === 1) {
+        window.location.href = "day7.html";
+        return;
+    }
 
+    // 2. Standard Modal for other days
+    const modal = document.getElementById('modal');
+    const content = document.getElementById('modalContent');
+    if (!modal || !content) return;
+
+    content.innerHTML = `
+        <h2 class="title-font text-4xl text-pink-500 mb-4">${data.title}</h2>
+        <p class="text-pink-800 leading-relaxed text-lg">${data.msg}</p>
+        <button onclick="closeModal()" class="mt-8 bg-pink-400 text-white px-8 py-3 rounded-full font-bold shadow-lg">Close</button>
+    `;
+    modal.classList.remove('hidden');
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffb6c1', '#ff69b4'] });
+}
 // 4. Grid Generation (TEST MODE)
 if (grid) {
     specialDates.forEach(dateObj => {
@@ -97,3 +116,4 @@ if (grid) {
         grid.appendChild(card);
     });
 }
+
