@@ -10,7 +10,78 @@ const specialDates = [
     { day: 4, month: 2, label: "Mar 4", title: "March Surprise ✨", msg: "Even after Valentine's, you're my number one." },
     { day: 27, month: 2, label: "Mar 27", title: "Final Celebration 👑", msg: "The most special day of all. I love you!" }
 ];
+const specialDates = [
+    { 
+        day: 7, month: 1, label: "Feb 7", 
+        title: "Rose Day 🌹", 
+        type: "video",
+        videoSrc: "rose-video.mp4", // Put your video filename here
+        msg: "Niku entha varaku nenu rose evvaledu, but rose and you are very similar in my life. Starting lo hate chesevadini slow ga prema lo padipoya" 
+    },
+    // ... keep your other dates here
+];
 
+function openModal(data) {
+    const modal = document.getElementById('modal');
+    const content = document.getElementById('modalContent');
+    
+    // Check if it's Day 7 for the Rose Animation
+    if(data.day === 7 && data.month === 1) {
+        triggerRoseRain();
+    }
+
+    if (data.type === "video") {
+        content.innerHTML = `
+            <h2 class="title-font text-4xl text-pink-500 mb-4">${data.title}</h2>
+            <div class="rounded-2xl overflow-hidden shadow-inner bg-black mb-4">
+                <video controls autoplay class="w-full">
+                    <source src="${data.videoSrc}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <p class="text-pink-800 italic leading-relaxed text-lg px-2">"${data.msg}"</p>
+            <button onclick="closeModal()" class="mt-6 bg-pink-400 text-white px-8 py-2 rounded-full font-bold">Close</button>
+        `;
+    } else {
+        // Standard text layout for other days
+        content.innerHTML = `
+            <h2 class="title-font text-4xl text-pink-500 mb-4">${data.title}</h2>
+            <p class="text-pink-800 text-lg">${data.msg}</p>
+            <button onclick="closeModal()" class="mt-8 bg-pink-400 text-white px-8 py-3 rounded-full font-bold">Close</button>
+        `;
+    }
+
+    modal.classList.remove('hidden');
+}
+
+// Cool Rose Animation
+function triggerRoseRain() {
+    var end = Date.now() + (2 * 1000);
+    var colors = ['#ff0000', '#ffb6c1', '#8b0000'];
+
+    (function frame() {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: colors,
+        shapes: ['circle'] // These look like falling petals
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: colors,
+        shapes: ['circle']
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
+}
 const grid = document.getElementById('calendarGrid');
 const now = new Date();
 const curDate = now.getDate();
@@ -82,3 +153,4 @@ function openModal(data) {
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
 updateProgress();
+
