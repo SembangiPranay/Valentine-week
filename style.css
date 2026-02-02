@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap');
+
+body {
+    background: #fff0f3;
+    background-image: radial-gradient(#ffccd5 1px, transparent 1px);
+    background-size: 20px 20px;
+    font-family: 'Quicksand', sans-serif;
+    color: #8c3b4a;
+}
+
+.pink-glass {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 182, 193, 0.4);
+    box-shadow: 0 8px 32px rgba(255, 182, 193, 0.2);
+}
+
+.title-font { font-family: 'Dancing Script', cursive; }
+
+.locked {
+    cursor: not-allowed;
+    filter: saturate(0.5) contrast(0.8);
+    background: #f8ecee !important;
+}
+
+.unlocked {
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.unlocked:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(255, 158, 170, 0.3);
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.floating { animation: float 3s ease-in-out infinite; }
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+.shake { animation: shake 0.4s ease-in-out; }

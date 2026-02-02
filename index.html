@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Favorite Dates ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen pb-20">
+
+    <header class="max-w-2xl mx-auto pt-12 px-6 text-center">
+        <h1 class="title-font text-5xl md:text-6xl text-pink-500 mb-6 floating">Our Love Journey</h1>
+        
+        <div class="pink-glass p-4 rounded-3xl mb-8">
+            <div class="flex justify-between text-xs font-bold uppercase tracking-widest mb-2 px-2">
+                <span>Start</span>
+                <span id="percentText">0% Complete</span>
+                <span>March 27</span>
+            </div>
+            <div class="bg-pink-100 rounded-full h-4 overflow-hidden border border-pink-200">
+                <div id="progressBar" class="bg-gradient-to-r from-pink-300 to-pink-500 h-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6" id="calendarGrid"></div>
+    </main>
+
+    <div id="modal" class="fixed inset-0 bg-pink-900/20 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center relative border-4 border-pink-100 shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-pink-300 hover:text-pink-500 text-2xl font-bold">&times;</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
