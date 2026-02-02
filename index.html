@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Favorite Dates ❤️</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="min-h-screen pb-20">
@@ -41,16 +44,20 @@
     </header>
 
     <main class="max-w-4xl mx-auto px-6">
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6" id="calendarGrid"></div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6" id="calendarGrid">
+            </div>
     </main>
 
-    <div id="modal" class="fixed inset-0 bg-pink-900/20 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center relative border-4 border-pink-100 shadow-2xl">
-            <button onclick="closeModal()" class="absolute top-6 right-6 text-pink-300 hover:text-pink-500 text-2xl font-bold">&times;</button>
-            <div id="modalContent"></div>
+    <div id="modal" class="fixed inset-0 bg-pink-900/40 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-[3rem] p-6 md:p-8 max-w-sm w-full text-center relative border-4 border-pink-100 shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-4 right-6 text-pink-300 hover:text-pink-500 text-3xl font-bold">&times;</button>
+            
+            <div id="modalContent" class="mt-4">
+                </div>
         </div>
     </div>
 
     <script src="script.js"></script>
+
 </body>
 </html>
