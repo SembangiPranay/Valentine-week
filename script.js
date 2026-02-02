@@ -15,7 +15,26 @@ const grid = document.getElementById('calendarGrid');
 const now = new Date();
 const curDate = now.getDate();
 const curMonth = now.getMonth(); 
+// 1. Countdown Logic
+function updateCountdown() {
+    const target = new Date("February 7, 2026 00:00:00").getTime();
+    const now = new Date().getTime();
+    const diff = target - now;
 
+    if (diff > 0) {
+        document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+        document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        document.getElementById('minutes').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    } else {
+        document.getElementById('countdown').innerHTML = "<p class='text-pink-500 animate-bounce'>The Magic Has Begun! ✨</p>";
+    }
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+// 2. Background Music (Optional)
+// To add music, find a YouTube link of "your song" and I can show you how to embed it 
+// so it plays softly when she clicks her first card.
 function updateProgress() {
     const start = new Date(now.getFullYear(), 1, 7); 
     const end = new Date(now.getFullYear(), 2, 27); 
@@ -61,4 +80,5 @@ function openModal(data) {
 }
 
 function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+
 updateProgress();
