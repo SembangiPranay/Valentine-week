@@ -102,6 +102,54 @@ function openModal(data) {
     modal.classList.remove('hidden');
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#ffb6c1', '#ff69b4'] });
 }
+// --- ADMIN & LOCK LOGIC ---
+
+// 1. Set your secret passcode here
+const SECRET_PASSCODE = "1403"; 
+
+function renderGrid(forceUnlock = false) {
+    grid.innerHTML = ''; // Clear existing cards
+    
+    specialDates.forEach(dateObj => {
+        // REAL LOGIC: Is it the right date? 
+        // OR: Is Admin mode active?
+        const isUnlocked = forceUnlock || (curMonth > dateObj.month) || (curMonth === dateObj.month && curDate >= dateObj.day);
+        
+        const card = document.createElement('div');
+        // If locked, it gets the 'locked' class, otherwise 'unlocked'
+        card.className = `h-40 rounded-[2.5rem] flex flex-col items-center justify-center border-2 border-pink-100 cursor-pointer p-4 text-center transition-all ${isUnlocked ? 'unlocked pink-glass shadow-sm' : 'locked text-pink-200'}`;
+        
+        card.innerHTML = `
+            <span class="text-xs font-bold opacity-60 uppercase mb-1">${dateObj.label}</span>
+            <span class="text-3xl">${isUnlocked ? '🎁' : '🔒'}</span>
+            <p class="text-sm font-semibold mt-2">${isUnlocked ? 'Open Me' : 'Locked'}</p>
+        `;
+
+        card.onclick = () => {
+            if (isUnlocked) {
+                openModal(dateObj);
+            } else {
+                card.classList.add('shake');
+                setTimeout(() => card.classList.remove('shake'), 400);
+            }
+        };
+        grid.appendChild(card);
+    });
+}
+
+// 2. Secret Unlock Function
+window.adminUnlock = function() {
+    const pw = prompt("Enter Admin Passcode:");
+    if (pw === SECRET_PASSCODE) {
+        alert("Admin Access Granted. All dates unlocked!");
+        renderGrid(true); // Re-render with forceUnlock = true
+    } else {
+        alert("Wrong code, lover boy!");
+    }
+};
+
+// 3. Initial Load (Locked based on date)
+renderGrid(false);
 // 4. Grid Generation (TEST MODE)
 if (grid) {
     specialDates.forEach(dateObj => {
@@ -116,4 +164,5 @@ if (grid) {
         grid.appendChild(card);
     });
 }
+
 
