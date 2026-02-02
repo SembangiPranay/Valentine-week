@@ -40,7 +40,20 @@ body {
 }
 
 .floating { animation: float 3s ease-in-out infinite; }
+body::before {
+    content: "❤️";
+    position: fixed;
+    top: -10%;
+    left: 10%;
+    font-size: 24px;
+    animation: fall 10s linear infinite;
+    opacity: 0.2;
+    z-index: -1;
+}
 
+@keyframes fall {
+    to { transform: translateY(110vh) rotate(360deg); }
+}
 @keyframes shake {
     0% { transform: translateX(0); }
     25% { transform: translateX(-5px); }
@@ -48,4 +61,5 @@ body {
     75% { transform: translateX(-5px); }
     100% { transform: translateX(0); }
 }
+
 .shake { animation: shake 0.4s ease-in-out; }
