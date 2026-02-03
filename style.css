@@ -1,4 +1,4 @@
-/* 1. Reset and Waterfall Engine */
+/* --- 1. Global Reset --- */
 * {
     margin: 0;
     padding: 0;
@@ -6,21 +6,21 @@
 }
 
 html {
-    /* This creates the smooth snapping effect from your video */
+    /* The Waterfall Engine: Forces vertical snapping */
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
 }
 
 body {
-    background-color: #0b0e14; /* Match your current dark theme */
+    background-color: #0b0e14;
     font-family: 'Inter', sans-serif;
     color: white;
     overflow-x: hidden;
 }
 
-/* 2. Fullscreen Waterfall Sections */
+/* --- 2. Waterfall Slide Layout --- */
 section.waterfall-slide {
-    height: 100vh; /* Every day takes up the full screen */
+    height: 100vh; /* Takes full screen height */
     width: 100vw;
     scroll-snap-align: start;
     scroll-snap-stop: always;
@@ -31,67 +31,89 @@ section.waterfall-slide {
     overflow: hidden;
 }
 
-/* 3. Background Video (The core fix) */
+/* --- 3. Background Video Styling --- */
 .bg-video {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* This makes it fill the background like the video you sent */
+    object-fit: cover; /* Ensures rose.mp4 covers the screen like the video */
     z-index: 0;
-    filter: brightness(0.5); /* Dims the video so your text pops */
+    filter: brightness(0.5); /* Dims video so white text is readable */
 }
 
-/* 4. The Glass Card (Rose Day box) */
+/* --- 4. The Glassmorphic Card --- */
 .glass-box {
     position: relative;
     z-index: 10;
     background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 3rem;
-    border-radius: 2.5rem;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 3.5rem 2rem;
+    border-radius: 3rem;
     text-align: center;
     max-width: 90%;
-    width: 450px;
+    width: 420px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
-/* 5. Typography and Effects */
-h2 {
+/* --- 5. Typography --- */
+.label-text {
+    text-transform: uppercase;
+    letter-spacing: 0.6em;
+    color: #fdba74; /* Orange-300 */
+    font-size: 0.7rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.title-text {
     font-size: 5rem;
     font-weight: 800;
-    margin-bottom: 1.5rem;
-    letter-spacing: -2px;
+    letter-spacing: -3px;
+    line-height: 1;
+    margin-bottom: 2rem;
 }
 
-.label {
+/* --- 6. Buttons & Animations --- */
+.action-btn {
+    background: white;
+    color: black;
+    padding: 1rem 2.5rem;
+    border-radius: 9999px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.5em;
-    color: #fdba74; /* Orange-300 like your JS */
-    font-size: 0.75rem;
-    margin-bottom: 1rem;
+    letter-spacing: 0.1em;
+    font-size: 0.8rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* 6. Animations */
+.action-btn:hover {
+    transform: scale(1.1);
+    background: #fdba74;
+}
+
 .fade-in {
     animation: slideUp 1.2s ease-out forwards;
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
+    from { opacity: 0; transform: translateY(40px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* 7. Scroll Indicator */
-.scroll-hint {
+/* Scroll Hint Line */
+.scroll-line {
     position: absolute;
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
-    opacity: 0.4;
-    text-align: center;
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, white, transparent);
+    opacity: 0.3;
 }
