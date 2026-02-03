@@ -3,69 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rose Day Surprise 🌹</title>
+    <title>Rose Day - Our Journey 🌹</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        .rose-gradient {
-            background: linear-gradient(180deg, #fff0f3 0%, #ffccd5 100%);
+        body {
+            background: #1a1a2e; /* Deep purple/blue like the video */
+            color: white;
+            scroll-behavior: smooth;
         }
-        .fade-in { animation: fadeIn 1.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .hero-section {
+            background: linear-gradient(to bottom, rgba(26,26,46,0) 0%, rgba(26,26,46,1) 90%);
+            height: 100vh;
+        }
+        .video-mask {
+            mask-image: linear-gradient(black 80%, transparent);
+            -webkit-mask-image: linear-gradient(black 80%, transparent);
+        }
     </style>
 </head>
-<body class="rose-gradient min-h-screen flex flex-col items-center justify-center p-6">
-    
-    <div class="max-w-lg w-full pink-glass p-8 rounded-[3rem] shadow-2xl text-center fade-in">
-        <h1 class="title-font text-5xl text-pink-600 mb-6">Happy Rose Day! 🌹</h1>
-        
-        <div class="rounded-3xl overflow-hidden shadow-2xl bg-black mb-8 border-4 border-white aspect-video">
-            <video controls autoplay playsinline class="w-full h-full">
+<body class="overflow-x-hidden">
+
+    <div class="relative h-screen flex flex-col items-center justify-center text-center px-6">
+        <div class="absolute inset-0 z-0 video-mask">
+            <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-60">
                 <source src="rose-video.mp4" type="video/mp4">
-                Your browser does not support the video tag.
             </video>
         </div>
+        
+        <div class="z-10 fade-in">
+            <h1 class="title-font text-7xl md:text-9xl text-orange-300 drop-shadow-2xl mb-4">ROSE</h1>
+            <p class="text-xl uppercase tracking-[0.5em] text-pink-200">Our Love Journey Begins</p>
+        </div>
+        
+        <div class="absolute bottom-10 animate-bounce z-10">
+            <span class="text-3xl">↓</span>
+        </div>
+    </div>
 
-        <div class="bg-white/40 p-6 rounded-2xl mb-8 border border-pink-200">
-            <p class="text-xl text-pink-900 italic leading-relaxed font-semibold">
-                "Niku entha varaku nenu rose evvaledu, but rose and you are very similar in my life. Starting lo hate chesevadini slow ga prema lo padipoya"
+    <div class="max-w-3xl mx-auto py-20 px-8 text-center">
+        <h2 class="text-4xl title-font text-orange-200 mb-10">A Rose for You</h2>
+        
+        <div class="pink-glass p-8 rounded-[3rem] border-orange-200/20 mb-12">
+            <p class="text-2xl leading-relaxed italic text-pink-100">
+                "Niku entha varaku nenu rose evvaledu, but rose and you are very similar in my life. 
+                Starting lo hate chesevadini slow ga prema lo padipoya."
             </p>
         </div>
 
-        <a href="index.html" class="inline-block bg-pink-500 text-white px-10 py-3 rounded-full font-bold shadow-lg hover:bg-pink-600 hover:scale-105 transition-all">
-            Return to Calendar ❤️
+        <a href="index.html" class="inline-block border-2 border-orange-300 text-orange-300 px-12 py-4 rounded-full font-bold hover:bg-orange-300 hover:text-black transition-all duration-500">
+            Continue the Journey
         </a>
     </div>
 
-    <script>
-        // Trigger red rose petal confetti on load
-        window.onload = () => {
-            const duration = 3 * 1000;
-            const end = Date.now() + duration;
-            const colors = ['#ff0000', '#ffccd5', '#8b0000'];
-
-            (function frame() {
-                confetti({
-                    particleCount: 2,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0, y: 0.8 },
-                    colors: colors
-                });
-                confetti({
-                    particleCount: 2,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1, y: 0.8 },
-                    colors: colors
-                });
-
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
-            }());
-        };
-    </script>
 </body>
 </html>
