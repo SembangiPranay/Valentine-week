@@ -1,4 +1,4 @@
-/* --- 1. Core Layout & Waterfall Snap --- */
+/* 1. Reset and Waterfall Engine */
 * {
     margin: 0;
     padding: 0;
@@ -6,21 +6,21 @@
 }
 
 html {
-    /* This creates the 'Waterfall' snapping effect */
+    /* This creates the smooth snapping effect from your video */
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
 }
 
 body {
-    background-color: #0f172a; /* Fallback deep blue/black */
-    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: #0b0e14; /* Match your current dark theme */
+    font-family: 'Inter', sans-serif;
     color: white;
     overflow-x: hidden;
 }
 
-/* --- 2. Waterfall Section Styling --- */
+/* 2. Fullscreen Waterfall Sections */
 section.waterfall-slide {
-    height: 100vh;
+    height: 100vh; /* Every day takes up the full screen */
     width: 100vw;
     scroll-snap-align: start;
     scroll-snap-stop: always;
@@ -31,78 +31,67 @@ section.waterfall-slide {
     overflow: hidden;
 }
 
-/* --- 3. Background Video (The VISITE Aesthetic) --- */
+/* 3. Background Video (The core fix) */
 .bg-video {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures video fills screen without stretching */
+    object-fit: cover; /* This makes it fill the background like the video you sent */
     z-index: 0;
-    filter: brightness(0.55) contrast(1.1); /* Darkens for text readability */
+    filter: brightness(0.5); /* Dims the video so your text pops */
 }
 
-/* --- 4. Content Overlay (Glassmorphism) --- */
+/* 4. The Glass Card (Rose Day box) */
 .glass-box {
     position: relative;
     z-index: 10;
-    background: rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 3rem;
-    border-radius: 3rem;
+    border-radius: 2.5rem;
     text-align: center;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    max-width: 90%;
+    width: 450px;
 }
 
-/* --- 5. Typography --- */
-.title-font {
-    /* If you have a specific font like 'Cormorant Garamond' link it in HTML */
-    font-family: serif; 
-}
-
+/* 5. Typography and Effects */
 h2 {
-    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-size: 5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    letter-spacing: -2px;
 }
 
-/* --- 6. Animations --- */
+.label {
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    color: #fdba74; /* Orange-300 like your JS */
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* 6. Animations */
 .fade-in {
-    animation: slideUpFade 1.5s ease-out forwards;
+    animation: slideUp 1.2s ease-out forwards;
 }
 
-@keyframes slideUpFade {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- 7. Buttons & Interactions --- */
-button {
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-button:hover {
-    transform: scale(1.1);
-    background-color: #fed7aa; /* orange-200 */
-    box-shadow: 0 0 20px rgba(254, 215, 170, 0.4);
-}
-
-/* --- 8. Mobile Adjustments --- */
-@media (max-width: 768px) {
-    .glass-box {
-        padding: 2rem;
-        margin: 0 1.5rem;
-    }
-    
-    h2 {
-        font-size: 3.5rem !important;
-    }
+/* 7. Scroll Indicator */
+.scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.4;
+    text-align: center;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
 }
