@@ -19,10 +19,18 @@
 
 <body class="fade-in">
 
-  <header class="max-w-3xl mx-auto pt-14 px-6 text-center">
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline class="bg-video">
+    <source src="hbg1.mp4" type="video/mp4">
+  </video>
+
+  <!-- Dark Overlay -->
+  <div class="video-overlay"></div>
+
+  <!-- CONTENT -->
+  <header class="max-w-3xl mx-auto pt-14 px-6 text-center relative z-10">
     <h1 class="title mb-10">Our Special Days</h1>
 
-    <!-- Progress -->
     <div class="progress-box">
       <div class="progress-labels">
         <span>FEB 7</span>
@@ -36,13 +44,12 @@
     </div>
   </header>
 
-  <!-- Calendar -->
-  <main class="max-w-6xl mx-auto px-6 mt-16">
+  <main class="max-w-6xl mx-auto px-6 mt-16 relative z-10">
     <div id="calendarGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
   </main>
 
-  <!-- Admin Unlock -->
-  <div onclick="adminUnlock()" class="fixed bottom-4 right-4 opacity-10 cursor-pointer select-none">
+  <!-- Hidden Admin Unlock -->
+  <div onclick="adminUnlock()" class="fixed bottom-4 right-4 opacity-10 cursor-pointer select-none z-10">
     ❤️
   </div>
 
