@@ -1,60 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rose Day - Our Journey 🌹</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            background: #1a1a2e; /* Deep purple/blue like the video */
-            color: white;
-            scroll-behavior: smooth;
-        }
-        .hero-section {
-            background: linear-gradient(to bottom, rgba(26,26,46,0) 0%, rgba(26,26,46,1) 90%);
-            height: 100vh;
-        }
-        .video-mask {
-            mask-image: linear-gradient(black 80%, transparent);
-            -webkit-mask-image: linear-gradient(black 80%, transparent);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rose Day 🌹</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* Background video */
+    .bg-video {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      z-index: -2;
+      filter: blur(2px) brightness(0.9);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.78);
+      z-index: -1;
+    }
+
+    /* Container */
+    .container {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      animation: fadeIn 1.4s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Card */
+    .card {
+      max-width: 520px;
+      padding: 40px 32px;
+      border-radius: 32px;
+      backdrop-filter: blur(16px);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+
+    /* Rose */
+    .rose {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+      animation: glow 3s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%,100% { text-shadow: 0 0 10px rgba(236,72,153,0.4); }
+      50% { text-shadow: 0 0 25px rgba(236,72,153,0.8); }
+    }
+
+    /* Title */
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      color: #ec4899;
+      margin-bottom: 20px;
+    }
+
+    /* Message */
+    .message {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #fce7f3;
+      margin-bottom: 30px;
+    }
+
+    /* Button */
+    .btn {
+      display: inline-block;
+      padding: 12px 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(236,72,153,0.5);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: rgba(236,72,153,0.2);
+      box-shadow: 0 0 20px rgba(236,72,153,0.4);
+      transform: translateY(-2px);
+    }
+  </style>
 </head>
-<body class="overflow-x-hidden">
 
-    <div class="relative h-screen flex flex-col items-center justify-center text-center px-6">
-        <div class="absolute inset-0 z-0 video-mask">
-            <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-60">
-                <source src="rose-video.mp4" type="video/mp4">
-            </video>
-        </div>
-        
-        <div class="z-10 fade-in">
-            <h1 class="title-font text-7xl md:text-9xl text-orange-300 drop-shadow-2xl mb-4">ROSE</h1>
-            <p class="text-xl uppercase tracking-[0.5em] text-pink-200">Our Love Journey Begins</p>
-        </div>
-        
-        <div class="absolute bottom-10 animate-bounce z-10">
-            <span class="text-3xl">↓</span>
-        </div>
+<body>
+
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline class="bg-video">
+    <source src="hbg1.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
+
+  <!-- Content -->
+  <div class="container">
+    <div class="card">
+      <div class="rose">🌹</div>
+      <h1>Rose Day</h1>
+
+      <div class="message">
+        This rose isn’t just for today.<br><br>
+        It’s for every moment you made my ordinary days feel special.<br>
+        For your smile, your patience, and the way you exist in my life.<br><br>
+        If I had to choose again,<br>
+        I’d still choose you — quietly, confidently, always.
+      </div>
+
+      <a href="index.html" class="btn">Back to Our Days</a>
     </div>
+  </div>
 
-    <div class="max-w-3xl mx-auto py-20 px-8 text-center">
-        <h2 class="text-4xl title-font text-orange-200 mb-10">A Rose for You</h2>
-        
-        <div class="pink-glass p-8 rounded-[3rem] border-orange-200/20 mb-12">
-            <p class="text-2xl leading-relaxed italic text-pink-100">
-                "Niku entha varaku nenu rose evvaledu, but rose and you are very similar in my life. 
-                Starting lo hate chesevadini slow ga prema lo padipoya."
-            </p>
-        </div>
-
-        <a href="index.html" class="inline-block border-2 border-orange-300 text-orange-300 px-12 py-4 rounded-full font-bold hover:bg-orange-300 hover:text-black transition-all duration-500">
-            Continue the Journey
-        </a>
-    </div>
+  <script>
+    // Soft confetti once on load
+    confetti({
+      particleCount: 120,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  </script>
 
 </body>
 </html>
