@@ -1,67 +1,63 @@
 const specialDates = [
-    { day: 7, month: 1, label: "Feb 07", title: "Rose Day", video: "rose.mp4", link: "day7.html" },
-    { day: 8, month: 1, label: "Feb 08", title: "Propose Day", video: "propose.mp4", link: "day8.html" },
-    { day: 9, month: 1, label: "Feb 09", title: "Chocolate Day", video: "chocolate.mp4", link: "day9.html" },
-    { day: 10, month: 1, label: "Feb 10", title: "Teddy Day", video: "teddy.mp4", link: "day10.html" },
-    { day: 11, month: 1, label: "Feb 11", title: "Promise Day", video: "promise.mp4", link: "day11.html" },
-    { day: 12, month: 1, label: "Feb 12", title: "Hug Day", video: "hug.mp4", link: "day12.html" },
-    { day: 13, month: 1, label: "Feb 13", title: "Kiss Day", video: "kiss.mp4", link: "day13.html" },
-    { day: 14, month: 1, label: "Feb 14", title: "VALENTINE", video: "valentine.mp4", link: "day14.html" }
+    { day: 7, month: 1, label: "Feb 07", title: "Rose Day 🌹", link: "day7.html" },
+    { day: 8, month: 1, label: "Feb 08", title: "Propose Day 💍", msg: "I'd choose you in every lifetime." },
+    { day: 9, month: 1, label: "Feb 09", title: "Chocolate Day 🍫", msg: "Sweet treats for my sweetest person." },
+    { day: 10, month: 1, label: "Feb 10", title: "Teddy Day 🧸", msg: "Sending you a digital bear hug!" },
+    { day: 11, month: 1, label: "Feb 11", title: "Promise Day 🤝", msg: "I promise to always be by your side." },
+    { day: 12, month: 1, label: "Feb 12", title: "Hug Day 🫂", msg: "Warmest hugs for you today." },
+    { day: 13, month: 1, label: "Feb 13", title: "Kiss Day 💋", msg: "Thinking of you and sending a kiss!" },
+    { day: 14, month: 1, label: "Feb 14", title: "VALENTINE 💖", msg: "Happy Valentine's Day, my love!" },
+    { day: 4, month: 2, label: "Mar 04", title: "Special Day ✨", msg: "Another beautiful day with you." },
+    { day: 27, month: 2, label: "Mar 27", title: "The Grand Finale 👑", msg: "The most special day of all. I love you!" }
 ];
 
 const SECRET_PASSCODE = "1403";
 const now = new Date();
-const curDate = now.getDate();
-const curMonth = now.getMonth(); // Feb is 1
 
-function renderWaterfall(forceUnlock = false) {
-    const container = document.getElementById('waterfall-container');
-    if (!container) return;
-    
-    container.innerHTML = ''; 
+function renderGrid(forceUnlock = false) {
+    const grid = document.getElementById('calendarGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
 
-    specialDates.forEach((date) => {
-        // Date Check: Months are 0-indexed
-        const isUnlocked = forceUnlock || (curMonth > date.month) || (curMonth === date.month && curDate >= date.day);
+    specialDates.forEach(date => {
+        const isUnlocked = forceUnlock || (now.getMonth() > date.month) || (now.getMonth() === date.month && now.getDate() >= date.day);
         
-        const section = document.createElement('section');
-        section.className = "waterfall-slide";
+        const card = document.createElement('div');
+        card.className = `p-6 rounded-[2rem] text-center transition-all cursor-pointer border-2 ${isUnlocked ? 'bg-white/10 border-pink-500/50 shadow-lg' : 'bg-gray-800/50 border-gray-700 opacity-50'}`;
         
-        section.innerHTML = `
-            <video autoplay muted loop playsinline class="bg-video">
-                <source src="${date.video}" type="video/mp4">
-            </video>
-            
-            <div class="glass-box fade-in">
-                <p class="label-text">${date.label}</p>
-                <h2 class="title-text">${date.title}</h2>
-                
-                ${isUnlocked ? 
-                    `<button onclick="window.location.href='${date.link}'" class="action-btn">Open Surprise</button>` : 
-                    `<div style="opacity: 0.5;">
-                        <span style="font-size: 2rem;">🔒</span>
-                        <p style="font-size: 0.7rem; margin-top: 10px; letter-spacing: 2px;">LOCKED</p>
-                    </div>`
-                }
-            </div>
-            
-            <div class="scroll-line"></div>
+        card.innerHTML = `
+            <p class="text-[10px] uppercase font-bold text-pink-400 mb-2">${date.label}</p>
+            <span class="text-3xl">${isUnlocked ? '🎁' : '🔒'}</span>
+            <p class="text-sm font-semibold mt-3 text-white">${isUnlocked ? 'Open' : 'Locked'}</p>
         `;
-        container.appendChild(section);
+
+        card.onclick = () => {
+            if (isUnlocked) {
+                if (date.day === 7 && date.month === 1) {
+                    window.location.href = date.link;
+                } else {
+                    alert(`${date.title}: ${date.msg}`);
+                }
+            }
+        };
+        grid.appendChild(card);
     });
 }
 
-// Global Admin Function
+function updateProgress() {
+    const start = new Date(2026, 1, 7); // Feb 7
+    const end = new Date(2026, 2, 27);  // Mar 27
+    const progress = Math.max(0, Math.min(100, ((now - start) / (end - start)) * 100));
+    
+    document.getElementById('progressBar').style.width = progress + "%";
+    document.getElementById('percentText').innerText = Math.floor(progress) + "% Journey";
+}
+
 window.adminUnlock = function() {
-    const code = prompt("Enter Admin Code:");
-    if (code === SECRET_PASSCODE) {
-        renderWaterfall(true);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-        alert("Incorrect Code.");
-    }
+    if (prompt("Passcode:") === SECRET_PASSCODE) renderGrid(true);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderWaterfall(false);
+    renderGrid();
+    updateProgress();
 });
