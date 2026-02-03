@@ -1,134 +1,108 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap');
-
-body {
-    background: #fff0f3;
-    background-image: radial-gradient(#ffccd5 1px, transparent 1px);
-    background-size: 20px 20px;
-    font-family: 'Quicksand', sans-serif;
-    color: #8c3b4a;
+/* --- 1. Core Layout & Waterfall Snap --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.pink-glass {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 182, 193, 0.4);
-    box-shadow: 0 8px 32px rgba(255, 182, 193, 0.2);
-}
-
-.title-font { font-family: 'Dancing Script', cursive; }
-
-.locked {
-    cursor: not-allowed;
-    filter: saturate(0.5) contrast(0.8);
-    background: #f8ecee !important;
-}
-
-.unlocked {
-    background: white;
-    transition: all 0.3s ease;
-}
-
-.unlocked:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 10px 20px rgba(255, 158, 170, 0.3);
-}
-
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-}
-
-.floating { animation: float 3s ease-in-out infinite; }
-body::before {
-    content: "❤️";
-    position: fixed;
-    top: -10%;
-    left: 10%;
-    font-size: 24px;
-    animation: fall 10s linear infinite;
-    opacity: 0.2;
-    z-index: -1;
-}
-
-@keyframes fall {
-    to { transform: translateY(110vh) rotate(360deg); }
-}
-@keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-}
-
-.shake { animation: shake 0.4s ease-in-out; }
-
-#modalContent {
-    animation: bloom 0.8s ease-out;
-}
-/* 1. Make the whole page snap-enabled */
 html {
+    /* This creates the 'Waterfall' snapping effect */
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
 }
 
-/* 2. Each section must take exactly the full screen */
-section.waterfall-slide {
-    height: 100vh;
-    width: 100vw;
-    scroll-snap-align: start; /* This makes it 'snap' into place */
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 3. The background video must cover the whole area */
-.bg-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    filter: brightness(0.7); /* Darkens video so text pops */
-}
-@keyframes bloom {
-    0% { transform: scale(0.8); opacity: 0; filter: blur(10px); }
-    100% { transform: scale(1); opacity: 1; filter: blur(0); }
-}
-/* Crucial for the Waterfall Effect */
-html {
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-}
-
-section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-}
-
-/* Prevents horizontal shaking on mobile */
 body {
+    background-color: #0f172a; /* Fallback deep blue/black */
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: white;
     overflow-x: hidden;
 }
 
+/* --- 2. Waterfall Section Styling --- */
+section.waterfall-slide {
+    height: 100vh;
+    width: 100vw;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* --- 3. Background Video (The VISITE Aesthetic) --- */
+.bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures video fills screen without stretching */
+    z-index: 0;
+    filter: brightness(0.55) contrast(1.1); /* Darkens for text readability */
+}
+
+/* --- 4. Content Overlay (Glassmorphism) --- */
+.glass-box {
+    position: relative;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 3rem;
+    border-radius: 3rem;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* --- 5. Typography --- */
+.title-font {
+    /* If you have a specific font like 'Cormorant Garamond' link it in HTML */
+    font-family: serif; 
+}
+
+h2 {
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* --- 6. Animations --- */
 .fade-in {
-    animation: fadeIn 2s ease-out;
+    animation: slideUpFade 1.5s ease-out forwards;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-/* Custom styling for the video player to keep it 'lovely' */
-video::-webkit-media-controls-panel {
-    background-image: linear-gradient(transparent, #ffccd5);
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
+/* --- 7. Buttons & Interactions --- */
+button {
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
+button:hover {
+    transform: scale(1.1);
+    background-color: #fed7aa; /* orange-200 */
+    box-shadow: 0 0 20px rgba(254, 215, 170, 0.4);
+}
+
+/* --- 8. Mobile Adjustments --- */
+@media (max-width: 768px) {
+    .glass-box {
+        padding: 2rem;
+        margin: 0 1.5rem;
+    }
+    
+    h2 {
+        font-size: 3.5rem !important;
+    }
+}
