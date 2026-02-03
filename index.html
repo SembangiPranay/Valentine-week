@@ -3,65 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Journey ❤️</title>
+    <title>Our Love Journey ❤️</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* This creates the smooth snapping effect from your video */
-        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
-        body { background-color: #0f172a; margin: 0; overflow-x: hidden; }
-        
-        section { 
-            scroll-snap-align: start; 
-            height: 100vh; 
-            width: 100vw;
-            position: relative; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .bg-video {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-            z-index: -1;
-            opacity: 0.6; /* Darkens video so text is readable */
-        }
-
-        .glass-box {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 3rem;
-            border-radius: 3rem;
-            text-align: center;
-        }
-    </style>
 </head>
-<body>
+<body class="bg-slate-900 min-h-screen pb-20">
 
-    <div onclick="adminUnlock()" class="fixed top-5 right-5 z-50 cursor-pointer opacity-30 hover:opacity-100 transition-opacity">
-        <span class="text-white text-xl">❤️</span>
-    </div>
-
-    <div id="waterfall-container">
-    <section class="waterfall-slide">
-        <video autoplay muted loop playsinline class="bg-video">
-            <source src="rose.mp4" type="video/mp4">
-        </video>
-        <div class="content">
-            <h1>Rose Day</h1>
-            <button onclick="window.location.href='day7.html'">Open</button>
+    <header class="max-w-2xl mx-auto pt-12 px-6 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-pink-500 mb-8">Our Special Days</h1>
+        
+        <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 mb-10">
+            <div class="flex justify-between text-xs font-bold text-pink-300 uppercase tracking-widest mb-2 px-2">
+                <span>Feb 7</span>
+                <span id="percentText">0% Journey</span>
+                <span>Mar 27</span>
+            </div>
+            <div class="bg-gray-700 rounded-full h-4 overflow-hidden p-0.5">
+                <div id="progressBar" class="bg-gradient-to-r from-pink-400 to-rose-600 h-full rounded-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
         </div>
-    </section>
+    </header>
 
-    <section class="waterfall-slide">
-        </section>
-</div>
+    <main class="max-w-5xl mx-auto px-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4" id="calendarGrid">
+            </div>
+    </main>
+
+    <div onclick="adminUnlock()" class="fixed bottom-4 right-4 opacity-10 cursor-pointer">❤️</div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
