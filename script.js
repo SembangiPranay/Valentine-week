@@ -18,34 +18,37 @@ function renderWaterfall(forceUnlock = false) {
     const container = document.getElementById('waterfall-container');
     if (!container) return;
     
-    container.innerHTML = ''; // Clear previous
+    container.innerHTML = ''; 
 
     specialDates.forEach((date) => {
         // Date Check: Months are 0-indexed (Jan=0, Feb=1)
         const isUnlocked = forceUnlock || (curMonth > date.month) || (curMonth === date.month && curDate >= date.day);
         
         const section = document.createElement('section');
+        // Adding a specific class for CSS Snapping
+        section.className = "waterfall-slide w-screen h-screen relative flex items-center justify-center overflow-hidden";
         
         section.innerHTML = `
-            <video autoplay muted loop playsinline class="bg-video">
+            <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-60">
                 <source src="${date.video}" type="video/mp4">
             </video>
             
-            <div class="glass-box max-w-lg mx-6 fade-in">
-                <p class="text-orange-300 tracking-[0.4em] uppercase text-xs mb-4">${date.label}</p>
-                <h2 class="text-6xl md:text-8xl font-bold text-white mb-10 tracking-tighter">${date.title}</h2>
+            <div class="glass-box relative z-10 max-w-lg mx-6 p-10 rounded-[3rem] text-center backdrop-blur-lg border border-white/20 bg-black/20 fade-in">
+                <p class="text-orange-300 tracking-[0.5em] uppercase text-xs mb-4 font-bold">${date.label}</p>
+                <h2 class="text-6xl md:text-8xl font-bold text-white mb-10 tracking-tighter leading-none">${date.title}</h2>
                 
                 ${isUnlocked ? 
-                    `<button onclick="window.location.href='${date.link}'" class="bg-white text-black px-12 py-4 rounded-full font-bold uppercase tracking-widest hover:bg-orange-300 transition-all duration-300 scale-110">Open Surprise</button>` : 
-                    `<div class="text-white/50 flex flex-col items-center gap-2">
-                        <span class="text-3xl">🔒</span>
-                        <p class="italic tracking-wide text-sm uppercase">Locked until ${date.label}</p>
+                    `<button onclick="window.location.href='${date.link}'" class="bg-white text-black px-12 py-4 rounded-full font-bold uppercase tracking-widest hover:bg-orange-300 hover:scale-110 transition-all duration-500 shadow-xl">Start Journey</button>` : 
+                    `<div class="text-white/40 flex flex-col items-center gap-3 animate-pulse">
+                        <span class="text-4xl">🔒</span>
+                        <p class="italic tracking-widest text-xs uppercase font-medium">Coming Soon</p>
                     </div>`
                 }
             </div>
             
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/30 animate-bounce">
-                <span>SCROLL DOWN</span>
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/40 flex flex-col items-center gap-2 z-10">
+                <span class="text-[10px] tracking-[0.3em] uppercase">Scroll</span>
+                <div class="w-[1px] h-12 bg-gradient-to-b from-white to-transparent"></div>
             </div>
         `;
         container.appendChild(section);
@@ -57,14 +60,12 @@ window.adminUnlock = function() {
     const code = prompt("Enter Secret Code:");
     if (code === SECRET_PASSCODE) {
         renderWaterfall(true);
-        // Scroll to top after unlocking
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
         alert("Access Denied.");
     }
 };
 
-// Start when page is ready
 document.addEventListener('DOMContentLoaded', () => {
     renderWaterfall(false);
 });
