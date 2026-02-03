@@ -14,13 +14,9 @@ const specialDates = [
 const SECRET_PASSCODE = "1403";
 const now = new Date();
 
-/* -------------------------
-   Render calendar
--------------------------- */
+/* Render cards */
 function renderGrid(forceUnlock = false) {
   const grid = document.getElementById("calendarGrid");
-  if (!grid) return;
-
   grid.innerHTML = "";
 
   specialDates.forEach(date => {
@@ -30,8 +26,6 @@ function renderGrid(forceUnlock = false) {
       (now.getMonth() === date.month && now.getDate() >= date.day);
 
     const card = document.createElement("div");
-
-    // Base card class
     card.classList.add("card");
 
     if (isUnlocked) {
@@ -49,16 +43,12 @@ function renderGrid(forceUnlock = false) {
     card.onclick = () => {
       if (!isUnlocked) return;
 
-      // First day → page
       if (date.link) {
         window.location.href = date.link;
-        return;
+      } else {
+        alert(`${date.title}\n\n${date.msg}`);
       }
 
-      // Others → alert
-      alert(`${date.title}\n\n${date.msg || ""}`);
-
-      // Soft confetti on open
       confetti({
         particleCount: 80,
         spread: 60,
@@ -70,38 +60,23 @@ function renderGrid(forceUnlock = false) {
   });
 }
 
-/* -------------------------
-   Progress bar
--------------------------- */
+/* Progress */
 function updateProgress() {
-  const start = new Date(2026, 1, 7); // Feb 7
-  const end = new Date(2026, 2, 27);  // Mar 27
+  const start = new Date(2026, 1, 7);
+  const end = new Date(2026, 2, 27);
+  const progress = Math.max(0, Math.min(100, ((now - start) / (end - start)) * 100));
 
-  const progress = Math.max(
-    0,
-    Math.min(100, ((now - start) / (end - start)) * 100)
-  );
-
-  const bar = document.getElementById("progressBar");
-  const text = document.getElementById("percentText");
-
-  if (bar) bar.style.width = progress + "%";
-  if (text) text.innerText = Math.floor(progress) + "% JOURNEY";
+  document.getElementById("progressBar").style.width = progress + "%";
+  document.getElementById("percentText").innerText = Math.floor(progress) + "% JOURNEY";
 }
 
-/* -------------------------
-   Admin unlock
--------------------------- */
+/* Admin unlock */
 window.adminUnlock = function () {
-  const pass = prompt("Passcode:");
-  if (pass === SECRET_PASSCODE) {
+  if (prompt("Passcode:") === SECRET_PASSCODE) {
     renderGrid(true);
   }
 };
 
-/* -------------------------
-   Init
--------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   updateProgress();
