@@ -1,60 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Favorite Dates ❤️</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="min-h-screen pb-20 overflow-x-hidden">
+const specialDates = [
+    { day: 7, month: 1, label: "Feb 7", title: "Rose Day 🌹", video: "rose.mp4", link: "day7.html" },
+    { day: 8, month: 1, label: "Feb 8", title: "Propose Day 💍", video: "propose.mp4", link: "day8.html" },
+    { day: 9, month: 1, label: "Feb 9", title: "Chocolate Day 🍫", video: "choc.mp4", link: "day9.html" }
+    // Add all your other days here...
+];
 
-    <header class="max-w-2xl mx-auto pt-12 px-6 text-center">
-        <h1 class="title-font text-5xl md:text-6xl text-pink-500 mb-6 floating">Our Love Journey</h1>
+const SECRET_PASSCODE = "1403";
+const now = new Date();
+const curDate = now.getDate();
+const curMonth = now.getMonth();
+
+function renderWaterfall(forceUnlock = false) {
+    const container = document.getElementById('waterfall-container');
+    container.innerHTML = '';
+
+    specialDates.forEach((dateObj) => {
+        const isUnlocked = forceUnlock || (curMonth > dateObj.month) || (curMonth === dateObj.month && curDate >= dateObj.day);
         
-        <div id="countdown" class="mb-6 flex justify-center gap-4 text-pink-600 font-bold">
-            <div class="pink-glass p-2 rounded-lg w-16">
-                <span id="days" class="text-2xl block">00</span>
-                <span class="text-[10px] uppercase">Days</span>
+        const section = document.createElement('section');
+        
+        section.innerHTML = `
+            <video autoplay muted loop playsinline class="video-bg">
+                <source src="${dateObj.video}" type="video/mp4">
+            </video>
+            
+            <div class="content-overlay text-center max-w-md mx-6 fade-in">
+                <p class="text-orange-300 tracking-[0.3em] uppercase text-sm mb-2">${dateObj.label}</p>
+                <h2 class="text-5xl font-bold mb-6">${dateObj.title}</h2>
+                
+                ${isUnlocked ? 
+                    `<button onclick="window.location.href='${dateObj.link}'" class="bg-white text-black px-8 py-3 rounded-full font-bold hover:bg-orange-300 transition">Enter Experience</button>` : 
+                    `<div class="text-pink-300 italic">Locked until ${dateObj.label} 🔒</div>`
+                }
             </div>
-            <div class="pink-glass p-2 rounded-lg w-16">
-                <span id="hours" class="text-2xl block">00</span>
-                <span class="text-[10px] uppercase">Hrs</span>
-            </div>
-            <div class="pink-glass p-2 rounded-lg w-16">
-                <span id="minutes" class="text-2xl block">00</span>
-                <span class="text-[10px] uppercase">Min</span>
-            </div>
-        </div>
+        `;
+        container.appendChild(section);
+    });
+}
 
-        <div class="pink-glass p-4 rounded-3xl mb-8">
-            <div class="flex justify-between text-xs font-bold uppercase tracking-widest mb-2 px-2">
-                <span>Start</span>
-                <span id="percentText">0% Complete</span>
-                <span>March 27</span>
-            </div>
-            <div class="bg-pink-100 rounded-full h-4 overflow-hidden border border-pink-200">
-                <div id="progressBar" class="bg-gradient-to-r from-pink-300 to-pink-500 h-full transition-all duration-1000 ease-out" style="width: 0%"></div>
-            </div>
-        </div>
-    </header>
+window.adminUnlock = function() {
+    if (prompt("Passcode:") === SECRET_PASSCODE) renderWaterfall(true);
+};
 
-    <main class="max-w-4xl mx-auto px-6">
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6" id="calendarGrid"></div>
-    </main>
-
-    <div id="modal" class="fixed inset-0 bg-pink-900/40 backdrop-blur-md hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-[3rem] p-8 max-w-sm w-full text-center relative border-4 border-pink-100 shadow-2xl">
-            <button onclick="closeModal()" class="absolute top-4 right-6 text-pink-300 hover:text-pink-500 text-3xl font-bold">&times;</button>
-            <div id="modalContent"></div>
-        </div>
-    </div>
-
-    <div onclick="adminUnlock()" class="fixed bottom-2 right-2 opacity-10 hover:opacity-100 cursor-pointer text-pink-300 z-50">
-        <span class="text-xs">❤️</span>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+document.addEventListener('DOMContentLoaded', () => renderWaterfall(false));
