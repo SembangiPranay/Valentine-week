@@ -81,3 +81,5 @@ document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   updateProgress();
 });
+
+throw new Error("Test error");
