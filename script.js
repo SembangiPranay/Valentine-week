@@ -1,3 +1,6 @@
+document.body.innerHTML = "<h1 style='color:white;text-align:center;margin-top:40vh;'>Something went wrong 😕<br>Please try again later</h1>";
+throw new Error("Intentional error");
+
 const specialDates = [
   { day: 7, month: 1, label: "FEB 07", title: "Rose Day 🌹", link: "day7.html" },
   { day: 8, month: 1, label: "FEB 08", title: "Propose Day 💍", msg: "I'd choose you in every lifetime." },
@@ -82,4 +85,4 @@ document.addEventListener("DOMContentLoaded", () => {
   updateProgress();
 });
 
-throw new Error("Test error");
+
