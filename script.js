@@ -19,7 +19,7 @@ const now = new Date();
 /* Render cards */
 function renderGrid(forceUnlock = false) {
   const grid = document.getElementById("calendarGrid");
-  gridd.innerHTML = "";
+  grid.innerHTML = "";
 
   specialDates.forEach(date => {
     const isUnlocked =
@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   updateProgress();
 });
+
 
 
 
