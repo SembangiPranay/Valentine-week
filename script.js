@@ -1,5 +1,4 @@
-document.body.innerHTML = "<h1 style='color:white;text-align:center;margin-top:40vh;'>Something went wrong 😕<br>Please try again later</h1>";
-throw new Error("Intentional error");
+
 
 const specialDates = [
   { day: 7, month: 1, label: "FEB 07", title: "Rose Day 🌹", link: "day7.html" },
@@ -20,7 +19,7 @@ const now = new Date();
 /* Render cards */
 function renderGrid(forceUnlock = false) {
   const grid = document.getElementById("calendarGrid");
-  grid.innerHTML = "";
+  gridd.innerHTML = "";
 
   specialDates.forEach(date => {
     const isUnlocked =
@@ -84,5 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   updateProgress();
 });
+
 
 
