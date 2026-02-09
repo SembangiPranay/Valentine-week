@@ -9,32 +9,44 @@
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
+    /* --------------------
+       RESET
+    --------------------- */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    body {
-      min-height: 100vh;
-      background: linear-gradient(180deg, #fff1f2, #fde7f3);
+    html, body {
+      width: 100%;
+      height: 100%;
       font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(180deg, #fff1f2, #fde7f3);
+      color: #7a2e4a;
+    }
+
+    body {
       display: flex;
       flex-direction: column;
     }
 
+    /* --------------------
+       HEADER
+    --------------------- */
     header {
       text-align: center;
-      padding: 16px;
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255,182,193,0.4);
+      padding: 16px 12px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 182, 193, 0.4);
     }
 
     header h1 {
       font-family: 'Dancing Script', cursive;
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       color: #ec4899;
+      margin-bottom: 4px;
     }
 
     header p {
@@ -42,21 +54,62 @@
       color: #9d174d;
     }
 
+    /* --------------------
+       PDF VIEWER
+    --------------------- */
     .viewer {
       flex: 1;
       width: 100%;
+      height: calc(100vh - 170px);
+      background: #fff;
     }
 
-    iframe {
+    embed {
       width: 100%;
       height: 100%;
       border: none;
     }
 
+    /* --------------------
+       MOBILE FALLBACK
+    --------------------- */
+    .mobile-fallback {
+      display: none;
+      text-align: center;
+      padding: 12px;
+      background: rgba(255,255,255,0.75);
+      border-top: 1px solid rgba(255,182,193,0.4);
+    }
+
+    .mobile-fallback p {
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: #9d174d;
+    }
+
+    .mobile-fallback a {
+      display: inline-block;
+      padding: 8px 20px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: #ec4899;
+      border: 1px solid rgba(236,72,153,0.5);
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-fallback a:hover {
+      background: rgba(236,72,153,0.15);
+      box-shadow: 0 0 12px rgba(236,72,153,0.3);
+    }
+
+    /* --------------------
+       BACK BUTTON
+    --------------------- */
     .back-btn {
       text-align: center;
       padding: 12px;
-      background: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.75);
       border-top: 1px solid rgba(255,182,193,0.4);
     }
 
@@ -64,7 +117,7 @@
       text-decoration: none;
       font-size: 0.95rem;
       color: #ec4899;
-      padding: 8px 20px;
+      padding: 8px 22px;
       border-radius: 999px;
       border: 1px solid rgba(236,72,153,0.5);
       transition: all 0.3s ease;
@@ -72,23 +125,45 @@
 
     .back-btn a:hover {
       background: rgba(236,72,153,0.15);
-      box-shadow: 0 0 15px rgba(236,72,153,0.3);
+      box-shadow: 0 0 15px rgba(236,72,153,0.35);
+      transform: translateY(-1px);
+    }
+
+    /* --------------------
+       MOBILE SAFETY
+    --------------------- */
+    @media (max-width: 768px) {
+      .viewer {
+        display: none;
+      }
+
+      .mobile-fallback {
+        display: block;
+      }
     }
   </style>
 </head>
 
 <body>
 
+  <!-- HEADER -->
   <header>
     <h1>Happy Teddy Day 🧸</h1>
-    <p>This one is for you 🤍</p>
+    <p>This one is just for you 🤍</p>
   </header>
 
+  <!-- PDF VIEWER -->
   <div class="viewer">
-    <!-- PDF Viewer -->
-    <iframe src="teddy-day.pdf"></iframe>
+    <embed src="teddy-day.pdf" type="application/pdf">
   </div>
 
+  <!-- MOBILE FALLBACK -->
+  <div class="mobile-fallback">
+    <p>If the PDF doesn’t open properly, tap below 👇</p>
+    <a href="teddy-day.pdf" target="_blank">Open Teddy Day PDF</a>
+  </div>
+
+  <!-- BACK -->
   <div class="back-btn">
     <a href="index.html">← Back to Our Days</a>
   </div>
