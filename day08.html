@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Propose Day 💍</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --pink: #f472b6;
+      --pink-soft: #fde7f3;
+      --red-1: #fecaca;
+      --red-2: #fca5a5;
+      --red-3: #f87171;
+      --red-4: #ef4444;
+      --red-5: #dc2626;
+      --naruto-orange: #fb923c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(180deg, #fff0f6, #ffe4ec);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background 1s ease;
+    }
+
+    /* Card */
+    .card {
+      max-width: 520px;
+      padding: 40px 32px;
+      border-radius: 32px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(244,114,182,0.25);
+      animation: fadeIn 1.2s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.6rem;
+      color: var(--pink);
+      margin-bottom: 24px;
+    }
+
+    .poem {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #7a2e4a;
+      margin-bottom: 30px;
+      white-space: pre-line;
+    }
+
+    /* Question popup */
+    .question {
+      margin-top: 20px;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #be185d;
+      animation: fadeIn 1s ease;
+    }
+
+    .buttons {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      font-family: inherit;
+    }
+
+    #yesBtn {
+      background: var(--pink);
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    #noBtn {
+      background: #fbcfe8;
+      color: #9d174d;
+    }
+
+    /* YES state (Naruto theme) */
+    body.yes {
+      background: linear-gradient(180deg, #ffedd5, var(--naruto-orange));
+    }
+
+    body.yes h1,
+    body.yes .question {
+      color: #9a3412;
+    }
+
+    .yes-image {
+      margin-top: 24px;
+      display: none;
+    }
+
+    .yes-image img {
+      max-width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card" id="card">
+    <h1>Propose Day 💍</h1>
+
+    <div class="poem">
+Secrets I have held in my heart  
+Are harder to hide than I thought  
+Maybe I just wanna be yours  
+I wanna be yours, I wanna be yours
+    </div>
+
+    <div class="question">Do you want to be mine? 💖</div>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes 💕</button>
+      <button id="noBtn">No 🙈</button>
+    </div>
+
+    <div class="yes-image" id="yesImage">
+      <img src="d7.jpg" alt="Us">
+    </div>
+  </div>
+
+  <!-- Background music -->
+  <audio id="bgMusic" loop>
+    <source src="iwannabeyours.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    let noCount = 0;
+    const maxNo = 5;
+
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const body = document.body;
+    const music = document.getElementById("bgMusic");
+    const yesImage = document.getElementById("yesImage");
+
+    // Play music on first interaction (browser rule)
+    function startMusic() {
+      music.play().catch(() => {});
+      document.removeEventListener("click", startMusic);
+    }
+    document.addEventListener("click", startMusic);
+
+    noBtn.onclick = () => {
+      noCount++;
+
+      // Shrink NO
+      noBtn.style.transform = `scale(${1 - noCount * 0.12})`;
+
+      // Grow YES
+      yesBtn.style.transform = `scale(${1 + noCount * 0.15})`;
+
+      // Increase red intensity
+      noBtn.style.background = `var(--red-${Math.min(noCount,5)})`;
+      noBtn.style.color = "white";
+
+      if (noCount >= maxNo) {
+        noBtn.style.display = "none";
+      }
+    };
+
+    yesBtn.onclick = () => {
+      body.classList.add("yes");
+      yesImage.style.display = "block";
+      yesBtn.style.display = "none";
+      noBtn.style.display = "none";
+
+      // Small celebration
+      card.style.boxShadow = "0 30px 60px rgba(251,146,60,0.6)";
+    };
+  </script>
+
+</body>
+</html>
