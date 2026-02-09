@@ -1,135 +1,55 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Love Journey ❤️</title>
 
-body {
-    background: #fff0f3;
-    background-image: radial-gradient(#ffccd5 1px, transparent 1px);
-    background-size: 20px 20px;
-    font-family: 'Quicksand', sans-serif;
-    color: #8c3b4a;
-}
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
-.pink-glass {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 182, 193, 0.4);
-    box-shadow: 0 8px 32px rgba(255, 182, 193, 0.2);
-}
+  <!-- Tailwind (grid utility only) -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-.title-font { font-family: 'Dancing Script', cursive; }
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-.locked {
-    cursor: not-allowed;
-    filter: saturate(0.5) contrast(0.8);
-    background: #f8ecee !important;
-}
+  <link rel="stylesheet" href="style.css">
+</head>
 
-.unlocked {
-    background: white;
-    transition: all 0.3s ease;
-}
+<body class="fade-in">
 
-.unlocked:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 10px 20px rgba(255, 158, 170, 0.3);
-}
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline class="bg-video">
+    <source src="hbg1.mp4" type="video/mp4">
+  </video>
+  <div class="video-overlay"></div>
 
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
-}
+  <!-- Header -->
+  <header class="max-w-3xl mx-auto pt-14 px-6 text-center relative z-10">
+    <h1 class="title-font text-4xl text-pink-500 mb-10">Our Special Days</h1>
 
-.floating { animation: float 3s ease-in-out infinite; }
-body::before {
-    content: "❤️";
-    position: fixed;
-    top: -10%;
-    left: 10%;
-    font-size: 24px;
-    animation: fall 10s linear infinite;
-    opacity: 0.2;
-    z-index: -1;
-}
+    <div class="pink-glass p-6 rounded-3xl">
+      <div class="flex justify-between text-xs font-bold text-pink-400 tracking-widest mb-2 px-2">
+        <span>FEB 7</span>
+        <span id="percentText">0% JOURNEY</span>
+        <span>MAR 27</span>
+      </div>
 
-@keyframes fall {
-    to { transform: translateY(110vh) rotate(360deg); }
-}
-@keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-}
+      <div class="bg-pink-200/40 rounded-full h-4 overflow-hidden">
+        <div id="progressBar" class="h-full rounded-full bg-gradient-to-r from-pink-400 to-rose-500"></div>
+      </div>
+    </div>
+  </header>
 
-.shake { animation: shake 0.4s ease-in-out; }
+  <!-- Calendar -->
+  <main class="max-w-6xl mx-auto px-6 mt-16 relative z-10">
+    <div id="calendarGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+  </main>
 
-#modalContent {
-    animation: bloom 0.8s ease-out;
-}
-/* 1. Make the whole page snap-enabled */
-html {
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-}
+  <!-- Hidden Admin Unlock -->
+  <div onclick="adminUnlock()" class="fixed bottom-4 right-4 opacity-10 cursor-pointer z-10">❤️</div>
 
-/* 2. Each section must take exactly the full screen */
-section.waterfall-slide {
-    height: 100vh;
-    width: 100vw;
-    scroll-snap-align: start; /* This makes it 'snap' into place */
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 3. The background video must cover the whole area */
-.bg-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    filter: brightness(0.7); /* Darkens video so text pops */
-}
-@keyframes bloom {
-    0% { transform: scale(0.8); opacity: 0; filter: blur(10px); }
-    100% { transform: scale(1); opacity: 1; filter: blur(0); }
-}
-/* Crucial for the Waterfall Effect */
-html {
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-}
-
-section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-}
-
-/* Prevents horizontal shaking on mobile */
-body {
-    overflow-x: hidden;
-}
-
-.fade-in {
-    animation: fadeIn 2s ease-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-/* Custom styling for the video player to keep it 'lovely' */
-video::-webkit-media-controls-panel {
-    background-image: linear-gradient(transparent, #ffccd5);
-}
-
-
-
+  <script src="script.js"></script>
+</body>
+</html>
