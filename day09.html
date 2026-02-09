@@ -100,6 +100,7 @@ html, body {
   padding: 48px 36px;
   box-shadow: 0 40px 80px rgba(0,0,0,0.7);
   animation: reveal 2s ease forwards;
+  max-width: 520px;
 }
 
 @keyframes reveal {
@@ -118,6 +119,35 @@ p {
   font-size: 1.1rem;
   line-height: 1.8;
   color: #f6d7c3;
+}
+
+/* Extra romantic line */
+.extra-line {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: var(--rose);
+  font-style: italic;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+.back-btn {
+  display: inline-block;
+  margin-top: 28px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  color: var(--gold);
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(201,124,46,0.6);
+  transition: all 0.4s ease;
+}
+
+.back-btn:hover {
+  background: rgba(201,124,46,0.2);
+  box-shadow: 0 0 20px rgba(201,124,46,0.4);
+  transform: translateY(-2px);
 }
 
 /* =========================
@@ -141,7 +171,7 @@ p {
 }
 
 /* =========================
-   MUSIC TOGGLE
+   MUSIC BUTTON
 ========================= */
 #musicBtn {
   position: fixed;
@@ -177,12 +207,19 @@ p {
 <div class="center">
   <div class="card">
     <h1>Happy Chocolate Day 🍫</h1>
+
     <p>
       You’re sweeter than chocolate.<br>
       Warmer than cocoa on a cold night.<br><br>
       If love had a flavor,<br>
-      it would taste like *you*.
+      it would taste like <em>you</em>.
     </p>
+
+    <p class="extra-line">
+      enjoy the chocolates baby 🍫❤️
+    </p>
+
+    <a href="index.html" class="back-btn">← Back to Our Days</a>
   </div>
 </div>
 
@@ -194,7 +231,7 @@ p {
 
 <script>
 /* =========================
-   CANVAS LAVA ANIMATION
+   CANVAS LAVA
 ========================= */
 const canvas = document.getElementById("lava");
 const ctx = canvas.getContext("2d");
@@ -233,7 +270,7 @@ function lava() {
 lava();
 
 /* =========================
-   SPARKLE TRAIL
+   SPARKLE CURSOR
 ========================= */
 document.addEventListener("mousemove", e => {
   const s = document.createElement("div");
@@ -245,7 +282,7 @@ document.addEventListener("mousemove", e => {
 });
 
 /* =========================
-   MUSIC CONTROL
+   MUSIC TOGGLE
 ========================= */
 const music = document.getElementById("music");
 const btn = document.getElementById("musicBtn");
