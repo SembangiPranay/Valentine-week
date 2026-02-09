@@ -1,5 +1,3 @@
-
-
 const specialDates = [
   { day: 7, month: 1, label: "FEB 07", title: "Rose Day 🌹", link: "day7.html" },
   { day: 8, month: 1, label: "FEB 08", title: "Propose Day 💍", msg: "I'd choose you in every lifetime." },
@@ -16,9 +14,10 @@ const specialDates = [
 const SECRET_PASSCODE = "1403";
 const now = new Date();
 
-/* Render cards */
 function renderGrid(forceUnlock = false) {
   const grid = document.getElementById("calendarGrid");
+  if (!grid) return;
+
   grid.innerHTML = "";
 
   specialDates.forEach(date => {
@@ -28,13 +27,7 @@ function renderGrid(forceUnlock = false) {
       (now.getMonth() === date.month && now.getDate() >= date.day);
 
     const card = document.createElement("div");
-    card.classList.add("card");
-
-    if (isUnlocked) {
-      card.classList.add("unlocked", "unlock");
-    } else {
-      card.classList.add("locked");
-    }
+    card.className = `card ${isUnlocked ? "unlocked" : "locked"}`;
 
     card.innerHTML = `
       <div class="date">${date.label}</div>
@@ -42,27 +35,26 @@ function renderGrid(forceUnlock = false) {
       <div class="status">${isUnlocked ? "Open" : "Locked"}</div>
     `;
 
-    card.onclick = () => {
-      if (!isUnlocked) return;
+    if (isUnlocked) {
+      card.onclick = () => {
+        if (date.link) {
+          window.location.href = date.link;
+        } else {
+          alert(`${date.title}\n\n${date.msg}`);
+        }
 
-      if (date.link) {
-        window.location.href = date.link;
-      } else {
-        alert(`${date.title}\n\n${date.msg}`);
-      }
-
-      confetti({
-        particleCount: 80,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
-    };
+        confetti({
+          particleCount: 60,
+          spread: 60,
+          origin: { y: 0.6 }
+        });
+      };
+    }
 
     grid.appendChild(card);
   });
 }
 
-/* Progress */
 function updateProgress() {
   const start = new Date(2026, 1, 7);
   const end = new Date(2026, 2, 27);
@@ -72,7 +64,6 @@ function updateProgress() {
   document.getElementById("percentText").innerText = Math.floor(progress) + "% JOURNEY";
 }
 
-/* Admin unlock */
 window.adminUnlock = function () {
   if (prompt("Passcode:") === SECRET_PASSCODE) {
     renderGrid(true);
@@ -83,7 +74,3 @@ document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   updateProgress();
 });
-
-
-
-
