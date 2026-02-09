@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chocolate Day 🍫</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   ROOT VARIABLES
+========================= */
+:root {
+  --dark: #1b0f0a;
+  --cocoa: #3b1f14;
+  --gold: #c97c2e;
+  --caramel: #ffb703;
+  --rose: #f4a7b9;
+}
+
+/* =========================
+   RESET
+========================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Quicksand', sans-serif;
+  background: radial-gradient(circle at top, #2a140d, var(--dark));
+  color: #fff;
+}
+
+/* =========================
+   CANVAS LAVA
+========================= */
+#lava {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+/* =========================
+   DRIPPING CHOCOLATE
+========================= */
+.drip {
+  position: fixed;
+  top: -120px;
+  width: 80px;
+  height: 200px;
+  background: linear-gradient(var(--cocoa), #120805);
+  border-radius: 0 0 50px 50px;
+  animation: drip 8s linear infinite;
+  opacity: 0.9;
+}
+
+@keyframes drip {
+  to { transform: translateY(120vh); }
+}
+
+/* =========================
+   FLOATING CHOCOLATES
+========================= */
+.choco {
+  position: absolute;
+  font-size: 40px;
+  animation: float 12s linear infinite;
+  cursor: pointer;
+}
+
+@keyframes float {
+  from { transform: translateY(110vh) rotate(0deg); }
+  to   { transform: translateY(-20vh) rotate(360deg); }
+}
+
+/* =========================
+   CONTENT CARD
+========================= */
+.center {
+  position: relative;
+  z-index: 5;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.card {
+  background: rgba(30,15,10,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 32px;
+  padding: 48px 36px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+  animation: reveal 2s ease forwards;
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #f6d7c3;
+}
+
+/* =========================
+   SPARKLES
+========================= */
+.sparkle {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--caramel);
+  pointer-events: none;
+  animation: sparkle 1s linear forwards;
+}
+
+@keyframes sparkle {
+  to {
+    transform: translateY(-20px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* =========================
+   MUSIC TOGGLE
+========================= */
+#musicBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10;
+  background: var(--gold);
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  color: #1b0f0a;
+  font-weight: bold;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="lava"></canvas>
+
+<!-- Chocolate drips -->
+<div class="drip" style="left:10%;animation-delay:0s"></div>
+<div class="drip" style="left:40%;animation-delay:3s"></div>
+<div class="drip" style="left:70%;animation-delay:6s"></div>
+
+<!-- Floating chocolates -->
+<div class="choco" style="left:15%">🍫</div>
+<div class="choco" style="left:50%">🍩</div>
+<div class="choco" style="left:80%">💝</div>
+
+<!-- Main Content -->
+<div class="center">
+  <div class="card">
+    <h1>Happy Chocolate Day 🍫</h1>
+    <p>
+      You’re sweeter than chocolate.<br>
+      Warmer than cocoa on a cold night.<br><br>
+      If love had a flavor,<br>
+      it would taste like *you*.
+    </p>
+  </div>
+</div>
+
+<button id="musicBtn">🎵 Music</button>
+
+<audio id="music" loop>
+  <source src="choco-music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* =========================
+   CANVAS LAVA ANIMATION
+========================= */
+const canvas = document.getElementById("lava");
+const ctx = canvas.getContext("2d");
+resize();
+
+window.addEventListener("resize", resize);
+
+let t = 0;
+function resize() {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+
+function lava() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const grad = ctx.createLinearGradient(0,0,0,canvas.height);
+  grad.addColorStop(0, "#3b1f14");
+  grad.addColorStop(1, "#1b0f0a");
+  ctx.fillStyle = grad;
+
+  ctx.beginPath();
+  ctx.moveTo(0, canvas.height);
+
+  for (let x=0; x<=canvas.width; x+=20) {
+    const y = canvas.height/2 + Math.sin(x*0.01 + t)*40;
+    ctx.lineTo(x,y);
+  }
+
+  ctx.lineTo(canvas.width,canvas.height);
+  ctx.closePath();
+  ctx.fill();
+
+  t += 0.02;
+  requestAnimationFrame(lava);
+}
+lava();
+
+/* =========================
+   SPARKLE TRAIL
+========================= */
+document.addEventListener("mousemove", e => {
+  const s = document.createElement("div");
+  s.className = "sparkle";
+  s.style.left = e.clientX+"px";
+  s.style.top = e.clientY+"px";
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),1000);
+});
+
+/* =========================
+   MUSIC CONTROL
+========================= */
+const music = document.getElementById("music");
+const btn = document.getElementById("musicBtn");
+let playing = false;
+
+btn.onclick = () => {
+  if (!playing) {
+    music.play();
+    btn.textContent = "⏸ Pause";
+  } else {
+    music.pause();
+    btn.textContent = "🎵 Music";
+  }
+  playing = !playing;
+};
+
+/* =========================
+   EASTER EGG
+========================= */
+let clicks = 0;
+document.querySelector(".card").onclick = () => {
+  clicks++;
+  if (clicks === 5) {
+    alert("🍫 Secret unlocked… you’re irresistible.");
+  }
+};
+</script>
+
+</body>
+</html>
