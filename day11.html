@@ -9,9 +9,9 @@
 
 <style>
 /* ======================
-   RESET & SKY
+   RESET
 ====================== */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
   width: 100%;
@@ -34,7 +34,7 @@ html, body {
     radial-gradient(1px 1px at 50% 70%, white, transparent),
     radial-gradient(1px 1px at 30% 90%, white, transparent);
   background-size: 300px 300px;
-  animation: drift 140s linear infinite;
+  animation: drift 160s linear infinite;
   opacity: 0.7;
 }
 @keyframes drift { to { background-position: 300px 300px; } }
@@ -44,15 +44,15 @@ html, body {
 ====================== */
 #moon {
   position: absolute;
-  top: 40%;
+  top: 38%;
   left: 50%;
   width: 220px;
   height: 220px;
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #fff, #ddd 40%, #aaa);
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 90px rgba(245,230,184,0.6);
-  animation: rotate 50s linear infinite;
+  box-shadow: 0 0 100px rgba(245,230,184,0.6);
+  animation: rotate 60s linear infinite;
 }
 @keyframes rotate {
   from { transform: translate(-50%, -50%) rotate(0deg); }
@@ -103,24 +103,25 @@ button {
   transition: all 0.4s ease;
 }
 button:hover {
-  box-shadow: 0 0 20px rgba(245,230,184,0.5);
+  box-shadow: 0 0 24px rgba(245,230,184,0.6);
 }
 
 /* ======================
-   HAND SYSTEM
+   HANDS (SMOOTH & SYNCED)
 ====================== */
 .hands {
   position: absolute;
-  bottom: -360px;
+  bottom: -300px;
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 0 12%;
+  padding: 0 14%;
   opacity: 0;
-  transition: all 3s ease;
+  transition:
+    bottom 5s cubic-bezier(.22,.61,.36,1),
+    opacity 2s ease;
 }
 
-/* PALM */
 .hand {
   width: 160px;
   height: 200px;
@@ -130,7 +131,6 @@ button:hover {
   box-shadow: 0 0 40px rgba(245,230,184,0.35);
 }
 
-/* FINGERS */
 .finger {
   position: absolute;
   width: 26px;
@@ -138,40 +138,58 @@ button:hover {
   background: linear-gradient(#f6e0c9, #c9a98e);
   border-radius: 18px;
   transform-origin: bottom center;
-  animation: tremble 2.8s ease-in-out infinite;
+  transition: transform 5s cubic-bezier(.22,.61,.36,1);
 }
 
-/* finger positions */
 .f1 { left: 10px; top: -70px; }
 .f2 { left: 40px; top: -80px; }
 .f3 { left: 70px; top: -82px; }
 .f4 { left: 100px; top: -78px; }
 .f5 { left: 130px; top: -70px; }
 
-/* nervous tremble */
-@keyframes tremble {
-  0%,100% { transform: rotate(0deg); }
-  50% { transform: rotate(2deg); }
-}
-
-/* PROMISE CURL */
 .promise .finger {
-  animation: curl 3s forwards;
-}
-@keyframes curl {
-  to { transform: rotate(-28deg); }
+  transform: rotate(-28deg);
 }
 
 /* ======================
-   PROMISE TEXT
+   WHITE FADE
 ====================== */
-#promise {
-  margin-top: 40px;
+#fade {
+  position: fixed;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 3s ease;
+  z-index: 20;
+}
+
+/* ======================
+   SOLAR SYSTEM
+====================== */
+#cosmos {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+#cosmos canvas {
+  width: 100%;
+  height: 100%;
+}
+
+#cosmicText {
+  position: absolute;
+  bottom: 12%;
+  width: 100%;
+  text-align: center;
   font-family: 'Playfair Display', serif;
   font-size: 1.6rem;
   color: #e6c87a;
-  opacity: 0;
-  transition: opacity 3s ease;
 }
 </style>
 </head>
@@ -189,27 +207,26 @@ button:hover {
     <button id="yes">Yes</button>
     <button id="no">I’m not ready yet</button>
   </div>
-
-  <div id="promise">I won’t leave you till the end of my life.</div>
 </div>
 
-<!-- HANDS -->
 <div class="hands" id="hands">
   <div class="hand">
-    <div class="finger f1"></div>
-    <div class="finger f2"></div>
-    <div class="finger f3"></div>
-    <div class="finger f4"></div>
+    <div class="finger f1"></div><div class="finger f2"></div>
+    <div class="finger f3"></div><div class="finger f4"></div>
     <div class="finger f5"></div>
   </div>
-
   <div class="hand">
-    <div class="finger f1"></div>
-    <div class="finger f2"></div>
-    <div class="finger f3"></div>
-    <div class="finger f4"></div>
+    <div class="finger f1"></div><div class="finger f2"></div>
+    <div class="finger f3"></div><div class="finger f4"></div>
     <div class="finger f5"></div>
   </div>
+</div>
+
+<div id="fade"></div>
+
+<div id="cosmos">
+  <canvas id="solar"></canvas>
+  <div id="cosmicText"></div>
 </div>
 
 <script>
@@ -228,20 +245,68 @@ function type() {
 }
 setTimeout(type, 1200);
 
-/* YES ACTION */
+/* YES FLOW */
 document.getElementById("yes").onclick = () => {
   const hands = document.getElementById("hands");
   hands.style.opacity = 1;
   hands.style.bottom = "120px";
   hands.classList.add("promise");
 
-  document.getElementById("promise").style.opacity = 1;
+  setTimeout(() => {
+    document.getElementById("fade").style.opacity = 1;
+  }, 4500);
+
+  setTimeout(startCosmos, 7500);
 };
 
-/* NO ACTION */
-document.getElementById("no").onclick = () => {
-  document.getElementById("moon").style.opacity = 0.4;
-};
+/* SOLAR SYSTEM */
+function startCosmos() {
+  document.getElementById("cosmos").style.display = "flex";
+  const canvas = document.getElementById("solar");
+  const ctx = canvas.getContext("2d");
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.translate(canvas.width/2, canvas.height/2);
+
+    // Sun
+    ctx.fillStyle = "#ffcc33";
+    ctx.beginPath();
+    ctx.arc(0,0,40,0,Math.PI*2);
+    ctx.fill();
+
+    // Planet
+    ctx.strokeStyle = "#444";
+    ctx.beginPath();
+    ctx.arc(0,0,160,0,Math.PI*2);
+    ctx.stroke();
+
+    ctx.fillStyle = "#6fa8dc";
+    ctx.beginPath();
+    ctx.arc(Math.cos(t)*160, Math.sin(t)*160, 12, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.resetTransform();
+    t += 0.003;
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  const lines = [
+    "In a universe this vast,",
+    "my promise is still only for you.",
+    "You are my constant."
+  ];
+  let idx = 0;
+  const textBox = document.getElementById("cosmicText");
+  const interval = setInterval(()=>{
+    textBox.innerHTML += "<br>" + lines[idx++];
+    if (idx === lines.length) clearInterval(interval);
+  }, 2000);
+}
 </script>
 
 </body>
