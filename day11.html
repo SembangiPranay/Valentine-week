@@ -1,168 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Promise Day</title>
+<meta charset="UTF-8">
+<title>Promise Day 🌙</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Georgia", serif;
-}
+/* ======================
+   RESET & SKY
+====================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  height: 100vh;
-  background: radial-gradient(circle at center, #0b132b, #02040f);
-  overflow: hidden;
-  color: #f5e6c8;
-}
-
-/* ===== STARS ===== */
-.stars {
-  position: absolute;
+html, body {
   width: 100%;
   height: 100%;
-  background-image: radial-gradient(#ffffff55 1px, transparent 1px);
-  background-size: 120px 120px;
-  animation: twinkle 6s infinite alternate;
+  overflow: hidden;
+  font-family: 'Quicksand', sans-serif;
+  background: radial-gradient(circle at bottom, #050816, #02030d);
+  color: white;
 }
 
-@keyframes twinkle {
-  from { opacity: 0.4; }
-  to   { opacity: 0.7; }
+/* ======================
+   STARS
+====================== */
+#stars {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at 10% 20%, white, transparent),
+    radial-gradient(1px 1px at 80% 30%, white, transparent),
+    radial-gradient(1px 1px at 50% 70%, white, transparent),
+    radial-gradient(1px 1px at 30% 90%, white, transparent);
+  background-size: 300px 300px;
+  animation: drift 140s linear infinite;
+  opacity: 0.7;
 }
+@keyframes drift { to { background-position: 300px 300px; } }
 
-/* ===== MOON ===== */
-.moon {
+/* ======================
+   MOON
+====================== */
+#moon {
   position: absolute;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #fff7d6, #e6d3a3);
-  top: 50%;
+  top: 40%;
   left: 50%;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, #ddd 40%, #aaa);
   transform: translate(-50%, -50%);
-  z-index: 1;
-  box-shadow: 0 0 80px #fff3c0;
-  animation: moonRotate 20s linear infinite;
+  box-shadow: 0 0 90px rgba(245,230,184,0.6);
+  animation: rotate 50s linear infinite;
 }
-
-@keyframes moonRotate {
+@keyframes rotate {
   from { transform: translate(-50%, -50%) rotate(0deg); }
   to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* ===== TEXT ===== */
-.content {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 20%;
+/* ======================
+   CONTENT
+====================== */
+#content {
+  position: relative;
   z-index: 5;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
 }
 
 h1 {
-  font-size: 48px;
-  margin-bottom: 10px;
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  color: #f5e6b8;
+  margin-bottom: 20px;
 }
 
-p {
-  font-size: 18px;
-  opacity: 0.85;
-}
-
-/* ===== HANDS ===== */
-.hand {
-  position: absolute;
-  width: 160px;
-  height: 260px;
-  background: #f1dcc5;
-  border-radius: 80px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 3;
-  box-shadow: 0 0 40px rgba(255, 240, 210, 0.4);
-}
-
-/* Left Hand */
-.hand.left {
-  left: 5%;
-  animation: leftHandMove 3s ease-out forwards;
-}
-
-/* Right Hand */
-.hand.right {
-  right: 5%;
-  animation: rightHandMove 3s ease-out forwards;
-}
-
-/* ===== HAND ANIMATIONS (FORCED CONTACT) ===== */
-@keyframes leftHandMove {
-  0%   { transform: translateY(-50%) translateX(0) scaleX(1); }
-  80%  { transform: translateY(-50%) translateX(420px) scaleX(1); }
-  100% { transform: translateY(-50%) translateX(420px) scaleX(0.97); }
-}
-
-@keyframes rightHandMove {
-  0%   { transform: translateY(-50%) translateX(0) scaleX(1); }
-  80%  { transform: translateY(-50%) translateX(-420px) scaleX(1); }
-  100% { transform: translateY(-50%) translateX(-420px) scaleX(0.97); }
-}
-
-/* ===== PROMISE TEXT ===== */
-.promise {
-  position: absolute;
-  bottom: 20%;
-  width: 100%;
-  text-align: center;
-  font-size: 26px;
+#question {
+  font-size: 1.15rem;
+  max-width: 520px;
+  line-height: 1.8;
   opacity: 0;
-  z-index: 6;
-  animation: promiseFade 3s ease forwards;
-  animation-delay: 3s;
 }
 
-@keyframes promiseFade {
-  to { opacity: 1; }
+.buttons {
+  margin-top: 28px;
+  display: none;
+  gap: 20px;
+}
+button {
+  padding: 10px 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+button:hover {
+  box-shadow: 0 0 20px rgba(245,230,184,0.5);
 }
 
-/* ===== GLOW LEAK ===== */
-.glow {
+/* ======================
+   HAND SYSTEM
+====================== */
+.hands {
   position: absolute;
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,240,200,0.6), transparent 70%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 4;
-  filter: blur(12px);
-  pointer-events: none;
+  bottom: -360px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12%;
+  opacity: 0;
+  transition: all 3s ease;
+}
+
+/* PALM */
+.hand {
+  width: 160px;
+  height: 200px;
+  background: radial-gradient(circle at top, #f6e0c9, #d1b299);
+  border-radius: 80px;
+  position: relative;
+  box-shadow: 0 0 40px rgba(245,230,184,0.35);
+}
+
+/* FINGERS */
+.finger {
+  position: absolute;
+  width: 26px;
+  height: 90px;
+  background: linear-gradient(#f6e0c9, #c9a98e);
+  border-radius: 18px;
+  transform-origin: bottom center;
+  animation: tremble 2.8s ease-in-out infinite;
+}
+
+/* finger positions */
+.f1 { left: 10px; top: -70px; }
+.f2 { left: 40px; top: -80px; }
+.f3 { left: 70px; top: -82px; }
+.f4 { left: 100px; top: -78px; }
+.f5 { left: 130px; top: -70px; }
+
+/* nervous tremble */
+@keyframes tremble {
+  0%,100% { transform: rotate(0deg); }
+  50% { transform: rotate(2deg); }
+}
+
+/* PROMISE CURL */
+.promise .finger {
+  animation: curl 3s forwards;
+}
+@keyframes curl {
+  to { transform: rotate(-28deg); }
+}
+
+/* ======================
+   PROMISE TEXT
+====================== */
+#promise {
+  margin-top: 40px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: #e6c87a;
+  opacity: 0;
+  transition: opacity 3s ease;
 }
 </style>
 </head>
 
 <body>
 
-<div class="stars"></div>
+<div id="stars"></div>
+<div id="moon"></div>
 
-<div class="content">
+<div id="content">
   <h1>Promise Day 🌙</h1>
-  <p>Are you ready to make a promise?</p>
+  <div id="question"></div>
+
+  <div class="buttons" id="choices">
+    <button id="yes">Yes</button>
+    <button id="no">I’m not ready yet</button>
+  </div>
+
+  <div id="promise">I won’t leave you till the end of my life.</div>
 </div>
 
-<div class="moon"></div>
-<div class="glow"></div>
+<!-- HANDS -->
+<div class="hands" id="hands">
+  <div class="hand">
+    <div class="finger f1"></div>
+    <div class="finger f2"></div>
+    <div class="finger f3"></div>
+    <div class="finger f4"></div>
+    <div class="finger f5"></div>
+  </div>
 
-<div class="hand left"></div>
-<div class="hand right"></div>
-
-<div class="promise">
-  I won’t leave you till the end of my life.
+  <div class="hand">
+    <div class="finger f1"></div>
+    <div class="finger f2"></div>
+    <div class="finger f3"></div>
+    <div class="finger f4"></div>
+    <div class="finger f5"></div>
+  </div>
 </div>
+
+<script>
+/* TYPEWRITER */
+const text = "Are you ready to make a promise?";
+const q = document.getElementById("question");
+let i = 0;
+function type() {
+  q.style.opacity = 1;
+  if (i < text.length) {
+    q.innerHTML += text[i++];
+    setTimeout(type, 70);
+  } else {
+    document.getElementById("choices").style.display = "flex";
+  }
+}
+setTimeout(type, 1200);
+
+/* YES ACTION */
+document.getElementById("yes").onclick = () => {
+  const hands = document.getElementById("hands");
+  hands.style.opacity = 1;
+  hands.style.bottom = "120px";
+  hands.classList.add("promise");
+
+  document.getElementById("promise").style.opacity = 1;
+};
+
+/* NO ACTION */
+document.getElementById("no").onclick = () => {
+  document.getElementById("moon").style.opacity = 0.4;
+};
+</script>
 
 </body>
 </html>
