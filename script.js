@@ -3,7 +3,7 @@ const specialDates = [
   { day: 8, month: 1, label: "FEB 08", title: "Propose Day 💍", link: "day08.html" },
   { day: 9, month: 1, label: "FEB 09", title: "Chocolate Day 🍫", link: "day09.html" },
   { day: 10, month: 1, label: "FEB 10", title: "Teddy Day 🧸", link: "day10.html" },
-  { day: 11, month: 1, label: "FEB 11", title: "Promise Day 🤝", msg: "I promise to always be by your side." },
+  { day: 11, month: 1, label: "FEB 11", title: "Promise Day 🤝", link: "day11.html" },
   { day: 12, month: 1, label: "FEB 12", title: "Hug Day 🫂", msg: "Warmest hugs for you today." },
   { day: 13, month: 1, label: "FEB 13", title: "Kiss Day 💋", msg: "Thinking of you and sending a kiss!" },
   { day: 14, month: 1, label: "FEB 14", title: "VALENTINE 💖", msg: "Happy Valentine's Day, my love!" },
@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   updateProgress();
 });
+
 
 
 
