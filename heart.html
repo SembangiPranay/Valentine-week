@@ -9,13 +9,13 @@
 body {
   margin: 0;
   overflow: hidden;
-  background: radial-gradient(circle at center, #1a1f3a 0%, #0B132B 70%);
+  background: radial-gradient(circle at center, #1a1f3a 0%, #0B132B 80%);
   font-family: Georgia, serif;
 }
 
 #overlayText {
   position: absolute;
-  bottom: 80px;
+  bottom: 60px;
   width: 100%;
   text-align: center;
   color: #FF6F91;
@@ -27,10 +27,7 @@ body {
 
 #fade {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: #0B132B;
   opacity: 0;
   pointer-events: none;
@@ -43,11 +40,10 @@ body {
 <div id="overlayText">Click the heart ❤️</div>
 <div id="fade"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 
 <script>
 let scene, camera, renderer, heart;
-let mouseX = 0, mouseY = 0;
 
 init();
 animate();
@@ -60,68 +56,58 @@ function init() {
     45,
     window.innerWidth / window.innerHeight,
     0.1,
-    1000
+    100
   );
-  camera.position.z = 8;
+  camera.position.z = 6;
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
 
-  // Lighting
-  const light1 = new THREE.PointLight(0xff6f91, 2);
-  light1.position.set(10, 10, 10);
-  scene.add(light1);
+  // Lights
+  const light = new THREE.PointLight(0xff6f91, 2);
+  light.position.set(5, 5, 5);
+  scene.add(light);
 
-  const light2 = new THREE.PointLight(0xffffff, 1);
-  light2.position.set(-10, -10, 5);
-  scene.add(light2);
+  const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+  scene.add(ambient);
 
-  // Heart Shape
-  const heartShape = new THREE.Shape();
-  heartShape.moveTo(0, 0);
-  heartShape.bezierCurveTo(0, 3, -4, 3, -4, 0);
-  heartShape.bezierCurveTo(-4, -3, 0, -5, 0, -7);
-  heartShape.bezierCurveTo(0, -5, 4, -3, 4, 0);
-  heartShape.bezierCurveTo(4, 3, 0, 3, 0, 0);
+  // Heart shape
+  const shape = new THREE.Shape();
+  shape.moveTo(0, 0);
+  shape.bezierCurveTo(0, 2, -2, 2, -2, 0);
+  shape.bezierCurveTo(-2, -2, 0, -3, 0, -4);
+  shape.bezierCurveTo(0, -3, 2, -2, 2, 0);
+  shape.bezierCurveTo(2, 2, 0, 2, 0, 0);
 
-  const geometry = new THREE.ExtrudeGeometry(heartShape, {
-    depth: 2,
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: 0.8,
     bevelEnabled: true,
-    bevelThickness: 0.5,
-    bevelSize: 0.5,
-    bevelSegments: 10
+    bevelThickness: 0.2,
+    bevelSize: 0.2,
+    bevelSegments: 5
   });
 
   const material = new THREE.MeshStandardMaterial({
     color: 0xff4f81,
-    metalness: 0.4,
+    metalness: 0.3,
     roughness: 0.2
   });
 
   heart = new THREE.Mesh(geometry, material);
-  heart.scale.set(0.3, 0.3, 0.3);
+  heart.rotation.x = Math.PI;
   scene.add(heart);
 
   document.getElementById("overlayText").style.opacity = 1;
 
-  window.addEventListener("mousemove", onMouseMove);
-  window.addEventListener("click", onClick);
+  window.addEventListener("click", () => {
+    document.getElementById("fade").style.opacity = 1;
+    setTimeout(() => {
+      window.location.href = "day14.html";
+    }, 1500);
+  });
+
   window.addEventListener("resize", onResize);
-}
-
-function onMouseMove(event) {
-  mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-  mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-}
-
-function onClick() {
-  const fade = document.getElementById("fade");
-  fade.style.opacity = 1;
-  setTimeout(() => {
-    window.location.href = "day14.html";
-  }, 1500);
 }
 
 function onResize() {
@@ -134,10 +120,7 @@ function animate() {
   requestAnimationFrame(animate);
 
   heart.rotation.y += 0.01;
-  heart.rotation.x = mouseY * 0.5;
-  heart.rotation.y += mouseX * 0.3;
-
-  heart.position.y = Math.sin(Date.now() * 0.002) * 0.3;
+  heart.position.y = Math.sin(Date.now() * 0.002) * 0.2;
 
   renderer.render(scene, camera);
 }
