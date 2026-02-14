@@ -1,77 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Our Love Journey ❤️</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Our Love Journey ❤️</title>
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Tailwind (grid utility only) -->
-  <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body class="fade-in">
 
-  <!-- Background Video -->
-  <video autoplay muted loop playsinline class="bg-video">
-    <source src="hbg1.mp4" type="video/mp4">
-  </video>
-  <div class="video-overlay"></div>
+<!-- Background Video -->
+<video autoplay muted loop playsinline class="bg-video">
+  <source src="hbg1.mp4" type="video/mp4">
+</video>
+<div class="video-overlay"></div>
 
-  <!-- Header -->
-  <header class="max-w-4xl mx-auto pt-16 px-6 text-center relative z-10">
+<header class="max-w-4xl mx-auto pt-16 px-6 text-center relative z-10">
 
-    <h1 class="main-title mb-12">Our Special Days</h1>
+  <h1 class="main-title mb-10">Our Special Days</h1>
 
-    <!-- Progress Wrapper -->
-    <div class="progress-wrapper">
+  <div class="progress-wrapper">
 
-      <!-- Valentine Week Progress -->
-      <div class="progress-section">
-
-        <div class="progress-header">
-          <span>FEB 7</span>
-          <span id="percentText">0% VALENTINE WEEK</span>
-          <span>FEB 14</span>
-        </div>
-
-        <div class="progress-bar">
-          <div id="progressBar"></div>
-        </div>
-
+    <!-- Valentine Week Progress -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span>FEB 7</span>
+        <span id="percentText">0% VALENTINE WEEK</span>
+        <span>FEB 14</span>
       </div>
 
-      <!-- March 4 Countdown -->
-      <div class="countdown-section">
-        <h3>March 4 ✨</h3>
-        <p id="march4Countdown">Loading...</p>
+      <div class="progress-bar">
+        <div id="progressBar"></div>
       </div>
-
-      <!-- March 27 Countdown -->
-      <div class="countdown-section">
-        <h3>March 27 👑</h3>
-        <p id="march27Countdown">Loading...</p>
-      </div>
-
     </div>
 
-  </header>
+    <!-- March 4 Countdown -->
+    <div class="countdown-section">
+      <h3>March 4 ✨</h3>
+      <p id="march4Countdown">Loading...</p>
+    </div>
 
-  <!-- Calendar -->
-  <main class="max-w-6xl mx-auto px-6 mt-16 relative z-10">
-    <div id="calendarGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
-  </main>
+    <!-- March 27 Countdown -->
+    <div class="countdown-section">
+      <h3>March 27 👑</h3>
+      <p id="march27Countdown">Loading...</p>
+    </div>
 
-  <!-- Hidden Admin Unlock -->
-  <div onclick="adminUnlock()" class="fixed bottom-4 right-4 opacity-10 cursor-pointer z-10">❤️</div>
+  </div>
 
-  <script src="script.js"></script>
+</header>
+
+<main class="max-w-6xl mx-auto px-6 mt-16 relative z-10">
+  <div id="calendarGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+</main>
+
+<div onclick="adminUnlock()" class="fixed bottom-4 right-4 opacity-10 cursor-pointer z-10">❤️</div>
+
+<script src="script.js"></script>
 </body>
 </html>
