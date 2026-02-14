@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Love Across Distance ❤️</title>
+<title>Love Across Distance 💗</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -15,42 +15,48 @@ html, body {
   background: #0B132B;
 }
 
-/* Map container */
 #map {
   height: 100%;
   width: 100%;
 }
 
-/* Overlay text */
 #overlayText {
   position: absolute;
-  bottom: 60px;
+  bottom: 70px;
   width: 100%;
   text-align: center;
   color: #FAD961;
   font-size: 30px;
-  letter-spacing: 0.5px;
-  text-shadow: 0 0 20px rgba(250,217,97,0.4);
+  line-height: 1.4;
+  text-shadow: 0 0 25px rgba(250,217,97,0.5);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 2s ease;
+  transition: opacity 2.5s ease;
 }
 
-/* Subtle fade gradient bottom */
+/* Romantic fade at bottom */
 #fadeOverlay {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 200px;
+  height: 250px;
   background: linear-gradient(to top, rgba(11,19,43,1), rgba(11,19,43,0));
+  pointer-events: none;
+}
+
+/* SVG overlay for curved line */
+#svgOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
   pointer-events: none;
 }
 </style>
 </head>
-
 <body>
 
 <div id="map"></div>
+<svg id="svgOverlay"></svg>
 <div id="fadeOverlay"></div>
 
 <div id="overlayText">
@@ -61,7 +67,7 @@ Distance means nothing when hearts stay connected.<br>
 <script>
 
 let map;
-let line;
+let overlayProjection;
 
 function initMap() {
 
@@ -70,90 +76,125 @@ function initMap() {
 
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: 20.3, lng: 81 },
-    zoom: 4,
+    zoom: 5,
     disableDefaultUI: true,
     styles: [
       { elementType: "geometry", stylers: [{ color: "#0B132B" }] },
       { elementType: "labels.text.fill", stylers: [{ color: "#8ec3ff" }] },
-      { elementType: "labels.text.stroke", stylers: [{ color: "#0B132B" }] },
       { featureType: "water", elementType: "geometry", stylers: [{ color: "#07102a" }] },
-      { featureType: "road", elementType: "geometry", stylers: [{ color: "#1c2541" }] },
-      { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#1c2541" }] }
+      { featureType: "road", elementType: "geometry", stylers: [{ color: "#1c2541" }] }
     ]
   });
 
-  // Glowing city markers
   createMarker(vizag);
   createMarker(nagpur);
 
-  // Animated polyline
-  line = new google.maps.Polyline({
-    path: [vizag, nagpur],
-    geodesic: true,
-    strokeColor: "#FF6F91",
-    strokeOpacity: 0.9,
-    strokeWeight: 3,
-    icons: [{
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 6,
-        fillColor: "#FAD961",
-        fillOpacity: 1,
-        strokeWeight: 0
-      },
-      offset: "0%"
-    }],
-    map: map
+  google.maps.event.addListenerOnce(map, 'idle', function() {
+    drawCurvedLine(vizag, nagpur);
+    document.getElementById("overlayText").style.opacity = 1;
   });
-
-  animateLine();
-  animateZoom();
-  showText();
 }
 
 function createMarker(position) {
-  new google.maps.Marker({
+  const marker = new google.maps.Marker({
     position: position,
     map: map,
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
-      scale: 10,
+      scale: 8,
       fillColor: "#FF6F91",
       fillOpacity: 1,
       strokeWeight: 0
     }
   });
-}
 
-function animateLine() {
-  let count = 0;
+  // Soft pulsing effect
   setInterval(() => {
-    count = (count + 1) % 200;
-    const icons = line.get("icons");
-    icons[0].offset = (count / 2) + "%";
-    line.set("icons", icons);
-  }, 20);
+    marker.setIcon({
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 8 + Math.random()*2,
+      fillColor: "#FF6F91",
+      fillOpacity: 0.8,
+      strokeWeight: 0
+    });
+  }, 800);
 }
 
-function animateZoom() {
-  let zoom = 4;
-  const zoomInterval = setInterval(() => {
-    zoom++;
-    map.setZoom(zoom);
-    if (zoom >= 6) clearInterval(zoomInterval);
-  }, 600);
+function drawCurvedLine(start, end) {
+
+  const overlay = new google.maps.OverlayView();
+
+  overlay.onAdd = function () {
+
+    const svg = document.getElementById("svgOverlay");
+    svg.setAttribute("width", window.innerWidth);
+    svg.setAttribute("height", window.innerHeight);
+
+    overlayProjection = overlay.getProjection();
+
+    const startPoint = overlayProjection.fromLatLngToDivPixel(
+      new google.maps.LatLng(start.lat, start.lng)
+    );
+
+    const endPoint = overlayProjection.fromLatLngToDivPixel(
+      new google.maps.LatLng(end.lat, end.lng)
+    );
+
+    const midX = (startPoint.x + endPoint.x) / 2;
+    const midY = (startPoint.y + endPoint.y) / 2 - 120;
+
+    const path = `
+      M ${startPoint.x},${startPoint.y}
+      Q ${midX},${midY}
+      ${endPoint.x},${endPoint.y}
+    `;
+
+    const romanticPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    romanticPath.setAttribute("d", path);
+    romanticPath.setAttribute("stroke", "url(#grad)");
+    romanticPath.setAttribute("stroke-width", "4");
+    romanticPath.setAttribute("fill", "none");
+    romanticPath.setAttribute("stroke-linecap", "round");
+    romanticPath.style.filter = "drop-shadow(0 0 12px #FF6F91)";
+
+    // Gradient
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    const gradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+    gradient.setAttribute("id", "grad");
+    gradient.innerHTML = `
+      <stop offset="0%" stop-color="#FF6F91"/>
+      <stop offset="100%" stop-color="#FAD961"/>
+    `;
+    defs.appendChild(gradient);
+    svg.appendChild(defs);
+    svg.appendChild(romanticPath);
+
+    animateLine(romanticPath);
+  };
+
+  overlay.draw = function(){};
+  overlay.setMap(map);
 }
 
-function showText() {
-  setTimeout(() => {
-    document.getElementById("overlayText").style.opacity = 1;
-  }, 4000);
+function animateLine(path) {
+  const length = path.getTotalLength();
+  path.style.strokeDasharray = length;
+  path.style.strokeDashoffset = length;
+
+  path.animate([
+    { strokeDashoffset: length },
+    { strokeDashoffset: 0 }
+  ], {
+    duration: 3000,
+    easing: "ease-out",
+    fill: "forwards"
+  });
 }
 
 </script>
 
 <script async
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&libraries=places&callback=initMap">
+src="https://maps.googleapis.com/maps/api/js?key=YOUR_SECURE_KEY_HERE&callback=initMap">
 </script>
 
 </body>
