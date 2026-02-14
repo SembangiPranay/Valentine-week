@@ -1,32 +1,165 @@
-<div id="mapScene">
-  <svg viewBox="0 0 1000 1000">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Love Across Distance ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- REALISTIC INDIA OUTLINE -->
-    <path id="indiaShape"
-      d="M510 130
-         C650 160 750 300 730 450
-         C710 600 630 750 500 820
-         C350 760 270 620 260 470
-         C250 330 350 200 510 130 Z"
-      fill="#1c2541"
-      stroke="#3a506b"
-      stroke-width="2"/>
+<script src="https://d3js.org/d3.v7.min.js"></script>
 
-    <!-- Cities -->
-    <circle id="vizag" class="city" cx="640" cy="580" r="10"/>
-    <circle id="nagpur" class="city" cx="580" cy="520" r="10"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
 
-    <!-- CURVED CONNECTION PATH -->
-    <path id="line"
-      d="M640 580 Q610 500 580 520"
-      stroke="#FF6F91"
-      stroke-width="3"
-      fill="none"
-      stroke-linecap="round"/>
+<style>
+body{
+  margin:0;
+  background:#0B132B;
+  overflow:hidden;
+  font-family:'Quicksand',sans-serif;
+  color:white;
+}
 
-    <!-- Traveling energy particle -->
-    <circle id="particle" r="7" fill="#FAD961"/>
-  </svg>
+#distanceText{
+  position:absolute;
+  bottom:40px;
+  width:100%;
+  text-align:center;
+  font-family:'Playfair Display',serif;
+  font-size:1.6rem;
+  color:#FAD961;
+  opacity:0;
+  transition:opacity 2s ease;
+}
 
-  <div id="distanceText"></div>
-</div>
+.city{
+  fill:#FF6F91;
+  filter:drop-shadow(0 0 15px #FF6F91);
+}
+
+.arc{
+  fill:none;
+  stroke:#FF6F91;
+  stroke-width:3;
+  filter:drop-shadow(0 0 10px #FF6F91);
+}
+</style>
+</head>
+
+<body>
+
+<svg id="map"></svg>
+<div id="distanceText"></div>
+
+<script>
+
+// SVG setup
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+const svg = d3.select("#map")
+  .attr("width", width)
+  .attr("height", height);
+
+// Projection
+const projection = d3.geoMercator()
+  .center([82,22])
+  .scale(width*2)
+  .translate([width/2, height/2]);
+
+const path = d3.geoPath().projection(projection);
+
+// Load India GeoJSON
+d3.json("https://raw.githubusercontent.com/deldersveld/topojson/master/countries/india/india-states.json")
+  .then(data => {
+
+    const geo = topojson.feature(data, data.objects.IND_adm1);
+
+    svg.append("g")
+      .selectAll("path")
+      .data(geo.features)
+      .enter()
+      .append("path")
+      .attr("d", path)
+      .attr("fill", "#1c2541")
+      .attr("stroke", "#3a506b")
+      .attr("stroke-width", 0.5);
+
+    drawConnection();
+  });
+
+// Coordinates
+const vizag = [83.2185,17.6868];
+const nagpur = [79.0882,21.1458];
+
+function drawConnection(){
+
+  const line = {
+    type: "LineString",
+    coordinates: [vizag, nagpur]
+  };
+
+  const arcPath = svg.append("path")
+    .datum(line)
+    .attr("class","arc")
+    .attr("d", path);
+
+  // Animate draw
+  const totalLength = arcPath.node().getTotalLength();
+  arcPath
+    .attr("stroke-dasharray", totalLength)
+    .attr("stroke-dashoffset", totalLength)
+    .transition()
+    .duration(3000)
+    .ease(d3.easeCubic)
+    .attr("stroke-dashoffset", 0);
+
+  // Cities
+  [vizag, nagpur].forEach(coord=>{
+    const [x,y] = projection(coord);
+    svg.append("circle")
+      .attr("class","city")
+      .attr("cx",x)
+      .attr("cy",y)
+      .attr("r",8);
+  });
+
+  animateParticle(arcPath);
+
+  setTimeout(()=>{
+    document.getElementById("distanceText").innerHTML =
+      "Distance means nothing when hearts stay connected.<br>~700 km apart, but always close.";
+    document.getElementById("distanceText").style.opacity=1;
+  },3500);
+}
+
+// Traveling particle
+function animateParticle(pathElement){
+  const length = pathElement.node().getTotalLength();
+
+  const particle = svg.append("circle")
+    .attr("r",6)
+    .attr("fill","#FAD961")
+    .attr("filter","drop-shadow(0 0 15px #FAD961)");
+
+  function repeat(){
+    particle
+      .transition()
+      .duration(4000)
+      .ease(d3.easeLinear)
+      .attrTween("transform", function(){
+        return function(t){
+          const point = pathElement.node().getPointAtLength(t*length);
+          return `translate(${point.x},${point.y})`;
+        }
+      })
+      .on("end", repeat);
+  }
+
+  repeat();
+}
+
+</script>
+
+<script src="https://unpkg.com/topojson@3"></script>
+
+</body>
+</html>
