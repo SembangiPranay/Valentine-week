@@ -11,7 +11,7 @@ html, body {
   padding: 0;
   height: 100%;
   overflow: hidden;
-  font-family: 'Georgia', serif;
+  font-family: Georgia, serif;
   background: #0B132B;
 }
 
@@ -26,15 +26,14 @@ html, body {
   width: 100%;
   text-align: center;
   color: #FAD961;
-  font-size: 30px;
+  font-size: 28px;
   line-height: 1.4;
-  text-shadow: 0 0 25px rgba(250,217,97,0.5);
+  text-shadow: 0 0 20px rgba(250,217,97,0.5);
   pointer-events: none;
   opacity: 0;
-  transition: opacity 2.5s ease;
+  transition: opacity 2s ease;
 }
 
-/* Romantic fade at bottom */
 #fadeOverlay {
   position: absolute;
   bottom: 0;
@@ -43,20 +42,11 @@ html, body {
   background: linear-gradient(to top, rgba(11,19,43,1), rgba(11,19,43,0));
   pointer-events: none;
 }
-
-/* SVG overlay for curved line */
-#svgOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-}
 </style>
 </head>
 <body>
 
 <div id="map"></div>
-<svg id="svgOverlay"></svg>
 <div id="fadeOverlay"></div>
 
 <div id="overlayText">
@@ -67,7 +57,6 @@ Distance means nothing when hearts stay connected.<br>
 <script>
 
 let map;
-let overlayProjection;
 
 function initMap() {
 
@@ -89,14 +78,15 @@ function initMap() {
   createMarker(vizag);
   createMarker(nagpur);
 
-  google.maps.event.addListenerOnce(map, 'idle', function() {
-    drawCurvedLine(vizag, nagpur);
+  drawRomanticCurve(vizag, nagpur);
+
+  setTimeout(() => {
     document.getElementById("overlayText").style.opacity = 1;
-  });
+  }, 3500);
 }
 
 function createMarker(position) {
-  const marker = new google.maps.Marker({
+  new google.maps.Marker({
     position: position,
     map: map,
     icon: {
@@ -107,88 +97,62 @@ function createMarker(position) {
       strokeWeight: 0
     }
   });
-
-  // Soft pulsing effect
-  setInterval(() => {
-    marker.setIcon({
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 8 + Math.random()*2,
-      fillColor: "#FF6F91",
-      fillOpacity: 0.8,
-      strokeWeight: 0
-    });
-  }, 800);
 }
 
-function drawCurvedLine(start, end) {
+function drawRomanticCurve(start, end) {
 
   const overlay = new google.maps.OverlayView();
 
   overlay.onAdd = function () {
+    const layer = overlay.getPanes().overlayLayer;
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.style.position = "absolute";
+    layer.appendChild(svg);
 
-    const svg = document.getElementById("svgOverlay");
-    svg.setAttribute("width", window.innerWidth);
-    svg.setAttribute("height", window.innerHeight);
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("stroke", "#FF6F91");
+    path.setAttribute("stroke-width", "4");
+    path.setAttribute("fill", "none");
+    path.style.filter = "drop-shadow(0 0 12px #FF6F91)";
+    path.style.strokeLinecap = "round";
+    svg.appendChild(path);
 
-    overlayProjection = overlay.getProjection();
+    overlay.draw = function () {
+      const projection = overlay.getProjection();
 
-    const startPoint = overlayProjection.fromLatLngToDivPixel(
-      new google.maps.LatLng(start.lat, start.lng)
-    );
+      const startPoint = projection.fromLatLngToDivPixel(
+        new google.maps.LatLng(start.lat, start.lng)
+      );
 
-    const endPoint = overlayProjection.fromLatLngToDivPixel(
-      new google.maps.LatLng(end.lat, end.lng)
-    );
+      const endPoint = projection.fromLatLngToDivPixel(
+        new google.maps.LatLng(end.lat, end.lng)
+      );
 
-    const midX = (startPoint.x + endPoint.x) / 2;
-    const midY = (startPoint.y + endPoint.y) / 2 - 120;
+      const bounds = map.getBounds();
+      if (!bounds) return;
 
-    const path = `
-      M ${startPoint.x},${startPoint.y}
-      Q ${midX},${midY}
-      ${endPoint.x},${endPoint.y}
-    `;
+      const ne = projection.fromLatLngToDivPixel(bounds.getNorthEast());
+      const sw = projection.fromLatLngToDivPixel(bounds.getSouthWest());
 
-    const romanticPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    romanticPath.setAttribute("d", path);
-    romanticPath.setAttribute("stroke", "url(#grad)");
-    romanticPath.setAttribute("stroke-width", "4");
-    romanticPath.setAttribute("fill", "none");
-    romanticPath.setAttribute("stroke-linecap", "round");
-    romanticPath.style.filter = "drop-shadow(0 0 12px #FF6F91)";
+      svg.style.left = sw.x + "px";
+      svg.style.top = ne.y + "px";
+      svg.setAttribute("width", ne.x - sw.x);
+      svg.setAttribute("height", sw.y - ne.y);
 
-    // Gradient
-    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-    const gradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-    gradient.setAttribute("id", "grad");
-    gradient.innerHTML = `
-      <stop offset="0%" stop-color="#FF6F91"/>
-      <stop offset="100%" stop-color="#FAD961"/>
-    `;
-    defs.appendChild(gradient);
-    svg.appendChild(defs);
-    svg.appendChild(romanticPath);
+      const x1 = startPoint.x - sw.x;
+      const y1 = startPoint.y - ne.y;
+      const x2 = endPoint.x - sw.x;
+      const y2 = endPoint.y - ne.y;
 
-    animateLine(romanticPath);
+      const midX = (x1 + x2) / 2;
+      const midY = (y1 + y2) / 2 - 150; // romantic lift
+
+      const d = `M ${x1} ${y1} Q ${midX} ${midY} ${x2} ${y2}`;
+      path.setAttribute("d", d);
+    };
   };
 
-  overlay.draw = function(){};
   overlay.setMap(map);
-}
-
-function animateLine(path) {
-  const length = path.getTotalLength();
-  path.style.strokeDasharray = length;
-  path.style.strokeDashoffset = length;
-
-  path.animate([
-    { strokeDashoffset: length },
-    { strokeDashoffset: 0 }
-  ], {
-    duration: 3000,
-    easing: "ease-out",
-    fill: "forwards"
-  });
 }
 
 </script>
@@ -199,4 +163,3 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ism
 
 </body>
 </html>
-
