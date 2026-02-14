@@ -6,7 +6,7 @@ const specialDates = [
   { day: 11, month: 1, label: "FEB 11", title: "Promise Day 🤝", link: "day11.html" },
   { day: 12, month: 1, label: "FEB 12", title: "Hug Day 🫂", msg: "Warmest hugs for you today." },
   { day: 13, month: 1, label: "FEB 13", title: "Kiss Day 💋", msg: "Thinking of you and sending a kiss!" },
-  { day: 14, month: 1, label: "FEB 14", title: "VALENTINE 💖", link: "day14.html" },
+  { day: 14, month: 1, label: "FEB 14", title: "VALENTINE 💖", link: "heart.html" },
   { day: 4, month: 2, label: "MAR 04", title: "Special Day ✨", msg: "Another beautiful day with you." },
   { day: 27, month: 2, label: "MAR 27", title: "The Grand Finale 👑", msg: "The most special day of all. I love you!" }
 ];
@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   updateProgress();
 });
+
 
 
 
