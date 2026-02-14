@@ -12,6 +12,7 @@ html, body {
   padding: 0;
   overflow-x: hidden;
   font-family: 'Quicksand', sans-serif;
+  color: #8c3b4a;
 }
 
 /* --------------------
@@ -28,13 +29,10 @@ html, body {
   filter: brightness(0.75);
 }
 
-/* Dark / soft overlay */
 .video-overlay {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255, 240, 243, 0.72);
+  background: rgba(255, 240, 243, 0.75);
   z-index: -1;
 }
 
@@ -51,29 +49,79 @@ html, body {
 }
 
 /* --------------------
-   TITLE
+   MAIN TITLE
 --------------------- */
-.title-font {
-  font-family: 'Dancing Script', cursive;
+.main-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 64px;
+  color: #ff6f91;
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(255, 111, 145, 0.35);
 }
 
 /* --------------------
-   GLASS CONTAINER
+   PROGRESS WRAPPER
 --------------------- */
-.pink-glass {
+.progress-wrapper {
   background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(12px);
-  border-radius: 24px;
+  backdrop-filter: blur(14px);
+  border-radius: 30px;
+  padding: 28px;
   border: 1px solid rgba(255, 182, 193, 0.45);
-  box-shadow: 0 10px 30px rgba(255, 182, 193, 0.25);
+  box-shadow: 0 12px 30px rgba(255, 182, 193, 0.25);
 }
 
 /* --------------------
-   PROGRESS BAR
+   VALENTINE WEEK BAR
 --------------------- */
+.progress-section {
+  margin-bottom: 28px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ff6f91;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.progress-bar {
+  background: #f8d7de;
+  height: 12px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
 #progressBar {
   width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #ff6f91, #ff4f81);
+  border-radius: 20px;
   transition: width 1s ease;
+}
+
+/* --------------------
+   COUNTDOWN SECTIONS
+--------------------- */
+.countdown-section {
+  text-align: center;
+  margin-top: 18px;
+}
+
+.countdown-section h3 {
+  font-weight: 600;
+  color: #d6336c;
+  margin-bottom: 4px;
+}
+
+.countdown-section p {
+  font-size: 18px;
+  font-weight: 600;
+  color: #8c3b4a;
 }
 
 /* --------------------
@@ -85,22 +133,23 @@ html, body {
   padding: 24px;
   text-align: center;
   transition: all 0.3s ease;
+  box-shadow: 0 6px 16px rgba(255, 158, 170, 0.15);
 }
 
 /* Locked state */
 .card.locked {
   background: #f4e9eb;
-  filter: saturate(0.5) contrast(0.9);
+  filter: saturate(0.6) contrast(0.9);
   cursor: not-allowed;
 }
 
 /* Unlocked hover */
 .card.unlocked:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 12px 24px rgba(255, 158, 170, 0.35);
+  transform: translateY(-6px) scale(1.04);
+  box-shadow: 0 14px 28px rgba(255, 158, 170, 0.35);
 }
 
-/* Card text */
+/* Card date text */
 .card .date {
   font-size: 0.65rem;
   letter-spacing: 2px;
@@ -117,14 +166,33 @@ html, body {
 }
 
 /* --------------------
+   SUBTLE GLOW ANIMATION
+--------------------- */
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 10px rgba(255,111,145,0.2); }
+  50% { box-shadow: 0 0 22px rgba(255,111,145,0.4); }
+  100% { box-shadow: 0 0 10px rgba(255,111,145,0.2); }
+}
+
+.progress-wrapper:hover {
+  animation: glowPulse 3s infinite;
+}
+
+/* --------------------
    MOBILE SAFETY
 --------------------- */
 @media (max-width: 768px) {
+
+  .main-title {
+    font-size: 48px;
+  }
+
   .bg-video {
-    height: 100svh; /* fixes mobile address-bar issues */
+    height: 100svh;
   }
 
   .video-overlay {
     height: 100svh;
   }
+
 }
