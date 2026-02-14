@@ -5,230 +5,202 @@
 <title>Valentine ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-/* =============================
-   GLOBAL
-============================= */
-* { margin:0; padding:0; box-sizing:border-box; }
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+  width:100%;height:100%;overflow:hidden;
+  font-family:'Quicksand',sans-serif;
+  background:#000;color:white;
+}
 
-html, body {
-  width:100%;
-  height:100%;
+/* ================= SPACE INTRO ================= */
+#space{
+  position:absolute;inset:0;
+  background:radial-gradient(circle at center,#1b1f3a,#000);
   overflow:hidden;
-  font-family:'Quicksand', sans-serif;
-  background: radial-gradient(circle at center, #1c2541, #0B132B);
-  color:white;
+  transition:opacity 2s ease;
 }
 
-/* =============================
-   SCENE 1 - HEART
-============================= */
-#heartScene {
+.star{
   position:absolute;
-  inset:0;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  transition: opacity 1.5s ease;
-}
-
-.heart {
-  width:150px;
-  height:150px;
-  position:relative;
-  transform: rotate(-45deg);
-  animation: heartbeat 2.5s infinite ease-in-out;
-  cursor:pointer;
-}
-
-.heart::before,
-.heart::after {
-  content:"";
-  position:absolute;
-  width:150px;
-  height:150px;
-  background:#FF6F91;
+  width:2px;height:2px;
+  background:white;
   border-radius:50%;
+  animation:twinkle 3s infinite alternate;
 }
 
-.heart::before { top:-75px; left:0; }
-.heart::after  { left:75px; top:0; }
-
-.heart {
-  background:#FF6F91;
-  box-shadow:0 0 60px rgba(255,111,145,0.7);
+@keyframes twinkle{
+  from{opacity:0.2}
+  to{opacity:1}
 }
 
-@keyframes heartbeat {
-  0%,100% { transform: rotate(-45deg) scale(1); }
-  50% { transform: rotate(-45deg) scale(1.1); }
-}
-
-#heartText {
-  margin-top:40px;
-  font-family:'Playfair Display', serif;
-  font-size:1.6rem;
-  opacity:0.8;
-}
-
-/* =============================
-   MAP SCENE
-============================= */
-#mapScene {
+/* Earth */
+#earth{
   position:absolute;
-  inset:0;
+  width:300px;height:300px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#3fa9f5,#0b3d91);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0.3);
+  box-shadow:0 0 80px #3fa9f5;
+  transition:transform 6s cubic-bezier(.22,.61,.36,1);
+}
+
+/* ================= MAP SCENE ================= */
+#mapScene{
+  position:absolute;inset:0;
+  display:flex;justify-content:center;align-items:center;
+  background:#0B132B;
   opacity:0;
-  transition: opacity 2s ease;
+  transition:opacity 2s ease;
 }
 
-#map {
-  width:100%;
-  height:100%;
+svg{
+  width:80%;
+  max-width:800px;
 }
 
-/* Glowing city markers */
-.city-marker {
-  background:#FF6F91;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  box-shadow:0 0 20px #FF6F91;
+/* India outline */
+#india path{
+  fill:#1c2541;
+  stroke:#3a506b;
+  stroke-width:1;
+}
+
+/* City hearts */
+.city{
+  fill:#FF6F91;
+  filter:drop-shadow(0 0 10px #FF6F91);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.2)}
+}
+
+/* Connection line */
+#line{
+  stroke:#FF6F91;
+  stroke-width:2;
+  fill:none;
+  stroke-dasharray:500;
+  stroke-dashoffset:500;
+  animation:draw 3s forwards;
+}
+@keyframes draw{
+  to{stroke-dashoffset:0}
+}
+
+/* Traveling particle */
+#particle{
+  fill:#FAD961;
+  filter:drop-shadow(0 0 8px #FAD961);
 }
 
 /* Distance text */
-#distanceText {
+#distanceText{
   position:absolute;
-  bottom:40px;
-  width:100%;
-  text-align:center;
-  font-size:1.3rem;
-  font-family:'Playfair Display', serif;
+  bottom:50px;
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem;
   color:#FAD961;
+  text-align:center;
+  width:100%;
   opacity:0;
-  transition: opacity 2s ease;
+  transition:opacity 2s ease;
 }
 </style>
 </head>
 
 <body>
 
-<!-- SCENE 1 -->
-<div id="heartScene">
-  <div class="heart" id="heart"></div>
-  <div id="heartText">Click the heart ❤️</div>
+<!-- SPACE INTRO -->
+<div id="space">
+  <div id="earth"></div>
 </div>
 
-<!-- SCENE 2 -->
+<!-- MAP SCENE -->
 <div id="mapScene">
-  <div id="map"></div>
+  <svg viewBox="0 0 800 800">
+
+    <!-- Simplified India shape -->
+    <g id="india">
+      <path d="M300 200 L500 250 L550 400 L500 600 L350 650 L250 550 L200 400 Z"/>
+    </g>
+
+    <!-- Cities -->
+    <circle id="vizag" class="city" cx="520" cy="480" r="8"/>
+    <circle id="nagpur" class="city" cx="450" cy="430" r="8"/>
+
+    <!-- Connection line -->
+    <path id="line" d="M520 480 L450 430"/>
+
+    <!-- Traveling particle -->
+    <circle id="particle" r="6"/>
+  </svg>
+
   <div id="distanceText"></div>
 </div>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
-/* =====================================
-   HEART CLICK TRANSITION
-===================================== */
-const heart = document.getElementById("heart");
-const heartScene = document.getElementById("heartScene");
-const mapScene = document.getElementById("mapScene");
 
-heart.onclick = () => {
-  heartScene.style.opacity = 0;
-  setTimeout(() => {
-    heartScene.style.display = "none";
-    mapScene.style.opacity = 1;
-    initMap();
-  }, 1500);
-};
-
-/* =====================================
-   MAP + DISTANCE
-===================================== */
-
-function initMap() {
-
-  const vizag = [17.6868, 83.2185];
-  const nagpur = [21.1458, 79.0882];
-
-  const map = L.map('map', {
-    zoomControl:false,
-    attributionControl:false
-  }).setView([20, 81], 5);
-
-  L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-  ).addTo(map);
-
-  const markerIcon = L.divIcon({
-    className:'city-marker'
-  });
-
-  L.marker(vizag,{icon:markerIcon}).addTo(map);
-  L.marker(nagpur,{icon:markerIcon}).addTo(map);
-
-  const line = L.polyline([vizag, nagpur], {
-    color:'#FF6F91',
-    weight:3,
-    opacity:0.7
-  }).addTo(map);
-
-  animateLine(line);
-
-  const distance = haversine(vizag, nagpur);
-  const text = document.getElementById("distanceText");
-  text.innerHTML = `
-  Distance means nothing when hearts stay connected.<br>
-  ~${Math.round(distance)} km apart, but always close.
-  `;
-  setTimeout(()=> text.style.opacity = 1, 2000);
+/* ============ CREATE STARS ============ */
+for(let i=0;i<200;i++){
+  const s=document.createElement("div");
+  s.className="star";
+  s.style.left=Math.random()*100+"%";
+  s.style.top=Math.random()*100+"%";
+  s.style.animationDuration=(2+Math.random()*3)+"s";
+  document.getElementById("space").appendChild(s);
 }
 
-/* =====================================
-   HAVERSINE FORMULA
-===================================== */
-function haversine(coord1, coord2) {
-  const R = 6371;
-  const dLat = (coord2[0]-coord1[0]) * Math.PI/180;
-  const dLon = (coord2[1]-coord1[1]) * Math.PI/180;
-  const lat1 = coord1[0] * Math.PI/180;
-  const lat2 = coord2[0] * Math.PI/180;
+/* ============ HEARTBEAT SOUND ============ */
+const audio = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-heart-beat-echo-3146.mp3");
+audio.loop=true;
 
-  const a = Math.sin(dLat/2)**2 +
-            Math.sin(dLon/2)**2 * Math.cos(lat1) * Math.cos(lat2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c;
-}
+/* ============ SATELLITE ZOOM ============ */
+setTimeout(()=>{
+  document.getElementById("earth").style.transform=
+    "translate(-50%,-50%) scale(1.5)";
+  audio.play();
+},1000);
 
-/* =====================================
-   LINE DRAW ANIMATION
-===================================== */
-function animateLine(line) {
-  const latlngs = line.getLatLngs();
-  line.setLatLngs([latlngs[0]]);
+setTimeout(()=>{
+  document.getElementById("space").style.opacity=0;
+  document.getElementById("mapScene").style.opacity=1;
+},7000);
 
-  let progress = 0;
-  const interval = setInterval(()=>{
-    progress += 0.02;
-    if(progress >= 1){
-      line.setLatLngs(latlngs);
-      clearInterval(interval);
-      return;
+/* ============ PARTICLE ANIMATION ============ */
+function animateParticle(){
+  const particle=document.getElementById("particle");
+  const start={x:520,y:480};
+  const end={x:450,y:430};
+  let t=0;
+
+  function move(){
+    const x=start.x+(end.x-start.x)*t;
+    const y=start.y+(end.y-start.y)*t;
+    particle.setAttribute("cx",x);
+    particle.setAttribute("cy",y);
+    t+=0.01;
+    if(t<=1)requestAnimationFrame(move);
+    else{
+      t=0;
+      requestAnimationFrame(move);
     }
-
-    const lat = latlngs[0].lat + (latlngs[1].lat - latlngs[0].lat)*progress;
-    const lng = latlngs[0].lng + (latlngs[1].lng - latlngs[0].lng)*progress;
-    line.setLatLngs([latlngs[0], [lat,lng]]);
-  }, 30);
+  }
+  move();
 }
+
+setTimeout(()=>{
+  animateParticle();
+  document.getElementById("distanceText").style.opacity=1;
+  document.getElementById("distanceText").innerHTML=
+  "Distance means nothing when hearts stay connected.<br>~700 km apart, but always close.";
+},9000);
+
 </script>
 
 </body>
