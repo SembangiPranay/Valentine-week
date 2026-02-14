@@ -1,207 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Valentine ❤️</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{
-  width:100%;height:100%;overflow:hidden;
-  font-family:'Quicksand',sans-serif;
-  background:#000;color:white;
-}
-
-/* ================= SPACE INTRO ================= */
-#space{
-  position:absolute;inset:0;
-  background:radial-gradient(circle at center,#1b1f3a,#000);
-  overflow:hidden;
-  transition:opacity 2s ease;
-}
-
-.star{
-  position:absolute;
-  width:2px;height:2px;
-  background:white;
-  border-radius:50%;
-  animation:twinkle 3s infinite alternate;
-}
-
-@keyframes twinkle{
-  from{opacity:0.2}
-  to{opacity:1}
-}
-
-/* Earth */
-#earth{
-  position:absolute;
-  width:300px;height:300px;
-  border-radius:50%;
-  background:radial-gradient(circle at 30% 30%,#3fa9f5,#0b3d91);
-  top:50%;left:50%;
-  transform:translate(-50%,-50%) scale(0.3);
-  box-shadow:0 0 80px #3fa9f5;
-  transition:transform 6s cubic-bezier(.22,.61,.36,1);
-}
-
-/* ================= MAP SCENE ================= */
-#mapScene{
-  position:absolute;inset:0;
-  display:flex;justify-content:center;align-items:center;
-  background:#0B132B;
-  opacity:0;
-  transition:opacity 2s ease;
-}
-
-svg{
-  width:80%;
-  max-width:800px;
-}
-
-/* India outline */
-#india path{
-  fill:#1c2541;
-  stroke:#3a506b;
-  stroke-width:1;
-}
-
-/* City hearts */
-.city{
-  fill:#FF6F91;
-  filter:drop-shadow(0 0 10px #FF6F91);
-  animation:pulse 2s infinite;
-}
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.2)}
-}
-
-/* Connection line */
-#line{
-  stroke:#FF6F91;
-  stroke-width:2;
-  fill:none;
-  stroke-dasharray:500;
-  stroke-dashoffset:500;
-  animation:draw 3s forwards;
-}
-@keyframes draw{
-  to{stroke-dashoffset:0}
-}
-
-/* Traveling particle */
-#particle{
-  fill:#FAD961;
-  filter:drop-shadow(0 0 8px #FAD961);
-}
-
-/* Distance text */
-#distanceText{
-  position:absolute;
-  bottom:50px;
-  font-family:'Playfair Display',serif;
-  font-size:1.4rem;
-  color:#FAD961;
-  text-align:center;
-  width:100%;
-  opacity:0;
-  transition:opacity 2s ease;
-}
-</style>
-</head>
-
-<body>
-
-<!-- SPACE INTRO -->
-<div id="space">
-  <div id="earth"></div>
-</div>
-
-<!-- MAP SCENE -->
 <div id="mapScene">
-  <svg viewBox="0 0 800 800">
+  <svg viewBox="0 0 1000 1000">
 
-    <!-- Simplified India shape -->
-    <g id="india">
-      <path d="M300 200 L500 250 L550 400 L500 600 L350 650 L250 550 L200 400 Z"/>
-    </g>
+    <!-- REALISTIC INDIA OUTLINE -->
+    <path id="indiaShape"
+      d="M510 130
+         C650 160 750 300 730 450
+         C710 600 630 750 500 820
+         C350 760 270 620 260 470
+         C250 330 350 200 510 130 Z"
+      fill="#1c2541"
+      stroke="#3a506b"
+      stroke-width="2"/>
 
     <!-- Cities -->
-    <circle id="vizag" class="city" cx="520" cy="480" r="8"/>
-    <circle id="nagpur" class="city" cx="450" cy="430" r="8"/>
+    <circle id="vizag" class="city" cx="640" cy="580" r="10"/>
+    <circle id="nagpur" class="city" cx="580" cy="520" r="10"/>
 
-    <!-- Connection line -->
-    <path id="line" d="M520 480 L450 430"/>
+    <!-- CURVED CONNECTION PATH -->
+    <path id="line"
+      d="M640 580 Q610 500 580 520"
+      stroke="#FF6F91"
+      stroke-width="3"
+      fill="none"
+      stroke-linecap="round"/>
 
-    <!-- Traveling particle -->
-    <circle id="particle" r="6"/>
+    <!-- Traveling energy particle -->
+    <circle id="particle" r="7" fill="#FAD961"/>
   </svg>
 
   <div id="distanceText"></div>
 </div>
-
-<script>
-
-/* ============ CREATE STARS ============ */
-for(let i=0;i<200;i++){
-  const s=document.createElement("div");
-  s.className="star";
-  s.style.left=Math.random()*100+"%";
-  s.style.top=Math.random()*100+"%";
-  s.style.animationDuration=(2+Math.random()*3)+"s";
-  document.getElementById("space").appendChild(s);
-}
-
-/* ============ HEARTBEAT SOUND ============ */
-const audio = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-heart-beat-echo-3146.mp3");
-audio.loop=true;
-
-/* ============ SATELLITE ZOOM ============ */
-setTimeout(()=>{
-  document.getElementById("earth").style.transform=
-    "translate(-50%,-50%) scale(1.5)";
-  audio.play();
-},1000);
-
-setTimeout(()=>{
-  document.getElementById("space").style.opacity=0;
-  document.getElementById("mapScene").style.opacity=1;
-},7000);
-
-/* ============ PARTICLE ANIMATION ============ */
-function animateParticle(){
-  const particle=document.getElementById("particle");
-  const start={x:520,y:480};
-  const end={x:450,y:430};
-  let t=0;
-
-  function move(){
-    const x=start.x+(end.x-start.x)*t;
-    const y=start.y+(end.y-start.y)*t;
-    particle.setAttribute("cx",x);
-    particle.setAttribute("cy",y);
-    t+=0.01;
-    if(t<=1)requestAnimationFrame(move);
-    else{
-      t=0;
-      requestAnimationFrame(move);
-    }
-  }
-  move();
-}
-
-setTimeout(()=>{
-  animateParticle();
-  document.getElementById("distanceText").style.opacity=1;
-  document.getElementById("distanceText").innerHTML=
-  "Distance means nothing when hearts stay connected.<br>~700 km apart, but always close.";
-},9000);
-
-</script>
-
-</body>
-</html>
