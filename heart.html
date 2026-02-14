@@ -2,8 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Happy Valentine's Day ❤️</title>
+<title>Happy Valentine’s Day ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
 body {
@@ -18,17 +20,14 @@ body {
   bottom: 80px;
   width: 100%;
   text-align: center;
-  font-size: 42px;
-  font-weight: 500;
+  font-size: 40px;
   letter-spacing: 2px;
   background: linear-gradient(90deg, #ff9ecf, #ffd86f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 30px rgba(255, 150, 200, 0.4);
+  text-shadow: 0 0 25px rgba(255,150,200,0.4);
 }
 </style>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -38,6 +37,8 @@ body {
 import * as THREE from 'https://unpkg.com/three@0.155.0/build/three.module.js';
 
 let scene, camera, renderer, heart, stars;
+let mouseX = 0, mouseY = 0;
+let comets = [];
 
 init();
 animate();
@@ -50,7 +51,7 @@ function init() {
     45,
     window.innerWidth / window.innerHeight,
     0.1,
-    100
+    200
   );
   camera.position.z = 8;
 
@@ -59,15 +60,14 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
 
-  // Lighting
-  const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-  scene.add(ambient);
+  // Lights
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
-  const pointLight = new THREE.PointLight(0xff6f91, 2);
-  pointLight.position.set(5, 5, 5);
-  scene.add(pointLight);
+  const light = new THREE.PointLight(0xff6f91, 2);
+  light.position.set(5, 5, 5);
+  scene.add(light);
 
-  // Smaller heart
+  // HEART SHAPE (sharp point down)
   const heartShape = new THREE.Shape();
   heartShape.moveTo(0, 0);
   heartShape.bezierCurveTo(0, 3, -3, 3, -3, 0);
@@ -90,29 +90,26 @@ function init() {
   });
 
   heart = new THREE.Mesh(geometry, material);
-
   heart.rotation.x = Math.PI;
-  heart.rotation.y = Math.PI;   // 180 degree rotation
-  heart.scale.set(0.35, 0.35, 0.35);  // smaller size
-
+  heart.scale.set(0.35, 0.35, 0.35);
   scene.add(heart);
 
-  // ⭐ Star field
+  // STAR FIELD
   const starGeometry = new THREE.BufferGeometry();
   const starCount = 1000;
-  const positions = [];
+  const starPositions = [];
 
   for (let i = 0; i < starCount; i++) {
-    positions.push(
-      (Math.random() - 0.5) * 100,
-      (Math.random() - 0.5) * 100,
-      (Math.random() - 0.5) * 100
+    starPositions.push(
+      (Math.random() - 0.5) * 200,
+      (Math.random() - 0.5) * 200,
+      (Math.random() - 0.5) * 200
     );
   }
 
   starGeometry.setAttribute(
     'position',
-    new THREE.Float32BufferAttribute(positions, 3)
+    new THREE.Float32BufferAttribute(starPositions, 3)
   );
 
   const starMaterial = new THREE.PointsMaterial({
@@ -123,7 +120,40 @@ function init() {
   stars = new THREE.Points(starGeometry, starMaterial);
   scene.add(stars);
 
+  // CREATE 3 COMETS
+  for (let i = 0; i < 3; i++) {
+    createComet();
+  }
+
+  window.addEventListener("mousemove", onMouseMove);
   window.addEventListener("resize", onResize);
+
+  // Click redirect
+  window.addEventListener("click", () => {
+    window.location.href = "day14.html";
+  });
+}
+
+function createComet() {
+  const geometry = new THREE.SphereGeometry(0.15, 16, 16);
+  const material = new THREE.MeshBasicMaterial({ color: 0xffd86f });
+  const comet = new THREE.Mesh(geometry, material);
+
+  comet.position.set(
+    -50 + Math.random() * 20,
+    20 - Math.random() * 40,
+    -20
+  );
+
+  comet.userData.speed = 0.2 + Math.random() * 0.2;
+
+  scene.add(comet);
+  comets.push(comet);
+}
+
+function onMouseMove(e) {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
 }
 
 function onResize() {
@@ -135,10 +165,24 @@ function onResize() {
 function animate() {
   requestAnimationFrame(animate);
 
-  heart.rotation.z += 0.005;
+  // Mouse-based rotation
+  heart.rotation.y = mouseX * 0.5;
+  heart.rotation.x = Math.PI + mouseY * 0.3;
   heart.position.y = Math.sin(Date.now() * 0.002) * 0.2;
 
+  // Star drift
   stars.rotation.y += 0.0005;
+
+  // Comet motion
+  comets.forEach(comet => {
+    comet.position.x += comet.userData.speed;
+    comet.position.y -= comet.userData.speed * 0.3;
+
+    if (comet.position.x > 60) {
+      comet.position.x = -60;
+      comet.position.y = 20 - Math.random() * 40;
+    }
+  });
 
   renderer.render(scene, camera);
 }
