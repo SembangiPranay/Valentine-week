@@ -1,217 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Love Across Distance</title>
+<title>Love Across Distance ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
-
 <style>
-body{
-  margin:0;
-  background:radial-gradient(circle at center,#101a3a 0%,#0B132B 60%,#070d1f 100%);
-  overflow:hidden;
-  font-family:'Quicksand',sans-serif;
-  color:white;
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Georgia', serif;
+  background: #0B132B;
 }
 
-#container{
-  position:relative;
-  width:100vw;
-  height:100vh;
+/* Map container */
+#map {
+  height: 100%;
+  width: 100%;
 }
 
-#distanceText{
-  position:absolute;
-  bottom:60px;
-  width:100%;
-  text-align:center;
-  font-family:'Playfair Display',serif;
-  font-size:1.8rem;
-  color:#FAD961;
-  opacity:0;
-  transition:opacity 2s ease;
+/* Overlay text */
+#overlayText {
+  position: absolute;
+  bottom: 60px;
+  width: 100%;
+  text-align: center;
+  color: #FAD961;
+  font-size: 30px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 20px rgba(250,217,97,0.4);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 2s ease;
 }
 
-svg{
-  width:100%;
-  height:100%;
-}
-
-/* Glow Filters */
-.city{
-  fill:#FF6F91;
-  filter:url(#cityGlow);
-}
-
-.arc{
-  fill:none;
-  stroke:#FF6F91;
-  stroke-width:3;
-  filter:url(#lineGlow);
-}
-
-#particle{
-  fill:#FAD961;
-  filter:url(#particleGlow);
+/* Subtle fade gradient bottom */
+#fadeOverlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(to top, rgba(11,19,43,1), rgba(11,19,43,0));
+  pointer-events: none;
 }
 </style>
 </head>
 
 <body>
 
-<div id="container">
-  <svg id="map"></svg>
-  <div id="distanceText"></div>
+<div id="map"></div>
+<div id="fadeOverlay"></div>
+
+<div id="overlayText">
+Distance means nothing when hearts stay connected.<br>
+~700 km apart, but always close.
 </div>
 
 <script>
 
-// SVG setup
-const width = window.innerWidth;
-const height = window.innerHeight;
+let map;
+let line;
 
-const svg = d3.select("#map")
-  .attr("width", width)
-  .attr("height", height);
+function initMap() {
 
-// Define glow filters
-const defs = svg.append("defs");
+  const vizag = { lat: 17.6868, lng: 83.2185 };
+  const nagpur = { lat: 21.1458, lng: 79.0882 };
 
-defs.append("filter")
-  .attr("id","cityGlow")
-  .append("feGaussianBlur")
-  .attr("stdDeviation","6")
-  .attr("result","coloredBlur");
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: 20.3, lng: 81 },
+    zoom: 4,
+    disableDefaultUI: true,
+    styles: [
+      { elementType: "geometry", stylers: [{ color: "#0B132B" }] },
+      { elementType: "labels.text.fill", stylers: [{ color: "#8ec3ff" }] },
+      { elementType: "labels.text.stroke", stylers: [{ color: "#0B132B" }] },
+      { featureType: "water", elementType: "geometry", stylers: [{ color: "#07102a" }] },
+      { featureType: "road", elementType: "geometry", stylers: [{ color: "#1c2541" }] },
+      { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#1c2541" }] }
+    ]
+  });
 
-defs.append("filter")
-  .attr("id","lineGlow")
-  .append("feGaussianBlur")
-  .attr("stdDeviation","4");
+  // Glowing city markers
+  createMarker(vizag);
+  createMarker(nagpur);
 
-defs.append("filter")
-  .attr("id","particleGlow")
-  .append("feGaussianBlur")
-  .attr("stdDeviation","8");
+  // Animated polyline
+  line = new google.maps.Polyline({
+    path: [vizag, nagpur],
+    geodesic: true,
+    strokeColor: "#FF6F91",
+    strokeOpacity: 0.9,
+    strokeWeight: 3,
+    icons: [{
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 6,
+        fillColor: "#FAD961",
+        fillOpacity: 1,
+        strokeWeight: 0
+      },
+      offset: "0%"
+    }],
+    map: map
+  });
 
-// Projection
-const projection = d3.geoMercator()
-  .center([82,22])
-  .scale(width*2.2)
-  .translate([width/2, height/2]);
-
-const path = d3.geoPath().projection(projection);
-
-// Embedded simplified India GeoJSON
-const india = {
-"type":"Feature",
-"geometry":{
-"type":"Polygon",
-"coordinates":[[
-[68,8],[97,8],[97,37],[68,37],[68,8]
-]]
-}
-};
-
-svg.append("path")
-  .datum(india)
-  .attr("d", path)
-  .attr("fill","#1c2541")
-  .attr("stroke","#3a506b")
-  .attr("stroke-width",1);
-
-// Coordinates
-const vizag = [83.2185,17.6868];
-const nagpur = [79.0882,21.1458];
-
-// Convert to screen coords
-const vizagXY = projection(vizag);
-const nagpurXY = projection(nagpur);
-
-// Draw curved arc
-const arcPath = svg.append("path")
-  .attr("class","arc")
-  .attr("d", `
-    M${vizagXY[0]},${vizagXY[1]}
-    Q${(vizagXY[0]+nagpurXY[0])/2},${vizagXY[1]-120}
-    ${nagpurXY[0]},${nagpurXY[1]}
-  `);
-
-// Animate line drawing
-const totalLength = arcPath.node().getTotalLength();
-arcPath
-  .attr("stroke-dasharray", totalLength)
-  .attr("stroke-dashoffset", totalLength)
-  .transition()
-  .duration(3000)
-  .ease(d3.easeCubic)
-  .attr("stroke-dashoffset",0);
-
-// Cities
-svg.append("circle")
-  .attr("class","city")
-  .attr("cx",vizagXY[0])
-  .attr("cy",vizagXY[1])
-  .attr("r",10);
-
-svg.append("circle")
-  .attr("class","city")
-  .attr("cx",nagpurXY[0])
-  .attr("cy",nagpurXY[1])
-  .attr("r",10);
-
-// Traveling particle
-const particle = svg.append("circle")
-  .attr("id","particle")
-  .attr("r",6);
-
-function animateParticle(){
-  let t=0;
-  function move(){
-    const x = (1-t)*(1-t)*vizagXY[0] +
-              2*(1-t)*t*((vizagXY[0]+nagpurXY[0])/2) +
-              t*t*nagpurXY[0];
-
-    const y = (1-t)*(1-t)*vizagXY[1] +
-              2*(1-t)*t*(vizagXY[1]-120) +
-              t*t*nagpurXY[1];
-
-    particle.attr("cx",x).attr("cy",y);
-
-    t+=0.01;
-    if(t>1) t=0;
-    requestAnimationFrame(move);
-  }
-  move();
+  animateLine();
+  animateZoom();
+  showText();
 }
 
-animateParticle();
-
-// Animated distance counter
-function animateDistance(){
-  const target = 700;
-  let current = 0;
-  const text = document.getElementById("distanceText");
-
-  const counter = setInterval(()=>{
-    current+=10;
-    if(current>=target){
-      current=target;
-      clearInterval(counter);
+function createMarker(position) {
+  new google.maps.Marker({
+    position: position,
+    map: map,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 10,
+      fillColor: "#FF6F91",
+      fillOpacity: 1,
+      strokeWeight: 0
     }
-    text.innerHTML=
-      "Distance means nothing when hearts stay connected.<br>~"
-      +current+" km apart, but always close.";
-  },20);
-
-  text.style.opacity=1;
+  });
 }
 
-setTimeout(animateDistance,3500);
+function animateLine() {
+  let count = 0;
+  setInterval(() => {
+    count = (count + 1) % 200;
+    const icons = line.get("icons");
+    icons[0].offset = (count / 2) + "%";
+    line.set("icons", icons);
+  }, 20);
+}
 
+function animateZoom() {
+  let zoom = 4;
+  const zoomInterval = setInterval(() => {
+    zoom++;
+    map.setZoom(zoom);
+    if (zoom >= 6) clearInterval(zoomInterval);
+  }, 600);
+}
+
+function showText() {
+  setTimeout(() => {
+    document.getElementById("overlayText").style.opacity = 1;
+  }, 4000);
+}
+
+</script>
+
+<script async
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&libraries=places&callback=initMap">
 </script>
 
 </body>
