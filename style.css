@@ -1,23 +1,17 @@
-/* --------------------
-   GLOBAL RESET
---------------------- */
+/* GLOBAL */
 * {
   box-sizing: border-box;
 }
 
 html, body {
-  width: 100%;
-  height: 100%;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   font-family: 'Quicksand', sans-serif;
-  color: #8c3b4a;
+  color: #f5c6d6;
 }
 
-/* --------------------
-   BACKGROUND VIDEO
---------------------- */
+/* BACKGROUND VIDEO */
 .bg-video {
   position: fixed;
   top: 0;
@@ -26,19 +20,17 @@ html, body {
   height: 100vh;
   object-fit: cover;
   z-index: -2;
-  filter: brightness(0.75);
+  filter: brightness(0.45) contrast(1.1);
 }
 
 .video-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(255, 240, 243, 0.75);
+  background: rgba(10, 10, 25, 0.55);
   z-index: -1;
 }
 
-/* --------------------
-   PAGE FADE-IN
---------------------- */
+/* FADE IN */
 .fade-in {
   animation: fadeIn 1.2s ease forwards;
 }
@@ -48,34 +40,33 @@ html, body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --------------------
-   MAIN TITLE
---------------------- */
+/* TITLE */
 .main-title {
   font-family: 'Great Vibes', cursive;
-  font-size: 64px;
-  color: #ff6f91;
-  letter-spacing: 2px;
-  text-shadow: 0 0 20px rgba(255, 111, 145, 0.35);
+  font-size: 72px;
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, #ff9ecf, #ffd6f6, #ff6f91);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow:
+    0 0 20px rgba(255, 158, 207, 0.4),
+    0 0 40px rgba(255, 111, 145, 0.2);
 }
 
-/* --------------------
-   PROGRESS WRAPPER
---------------------- */
+/* PROGRESS WRAPPER */
 .progress-wrapper {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(14px);
-  border-radius: 30px;
-  padding: 28px;
-  border: 1px solid rgba(255, 182, 193, 0.45);
-  box-shadow: 0 12px 30px rgba(255, 182, 193, 0.25);
+  max-width: 700px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  border-radius: 28px;
+  padding: 22px 30px;
+  border: 1px solid rgba(255, 182, 193, 0.25);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
 }
 
-/* --------------------
-   VALENTINE WEEK BAR
---------------------- */
 .progress-section {
-  margin-bottom: 28px;
+  margin-bottom: 25px;
 }
 
 .progress-header {
@@ -84,13 +75,13 @@ html, body {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 2px;
-  color: #ff6f91;
+  color: #ff9ecf;
   margin-bottom: 8px;
   text-transform: uppercase;
 }
 
 .progress-bar {
-  background: #f8d7de;
+  background: rgba(255,255,255,0.15);
   height: 12px;
   border-radius: 20px;
   overflow: hidden;
@@ -104,52 +95,43 @@ html, body {
   transition: width 1s ease;
 }
 
-/* --------------------
-   COUNTDOWN SECTIONS
---------------------- */
+/* COUNTDOWN */
 .countdown-section {
   text-align: center;
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 .countdown-section h3 {
+  color: #ff9ecf;
   font-weight: 600;
-  color: #d6336c;
-  margin-bottom: 4px;
 }
 
 .countdown-section p {
-  font-size: 18px;
-  font-weight: 600;
-  color: #8c3b4a;
+  font-size: 17px;
+  font-weight: 500;
+  color: #ffd6f6;
 }
 
-/* --------------------
-   CALENDAR CARDS
---------------------- */
+/* CARDS */
 .card {
-  background: white;
+  background: rgba(255,255,255,0.9);
   border-radius: 2rem;
   padding: 24px;
   text-align: center;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 16px rgba(255, 158, 170, 0.15);
 }
 
-/* Locked state */
 .card.locked {
-  background: #f4e9eb;
-  filter: saturate(0.6) contrast(0.9);
+  background: rgba(255,255,255,0.4);
+  filter: grayscale(0.4);
   cursor: not-allowed;
 }
 
-/* Unlocked hover */
 .card.unlocked:hover {
   transform: translateY(-6px) scale(1.04);
-  box-shadow: 0 14px 28px rgba(255, 158, 170, 0.35);
+  box-shadow: 0 14px 28px rgba(255, 111, 145, 0.4);
 }
 
-/* Card date text */
 .card .date {
   font-size: 0.65rem;
   letter-spacing: 2px;
@@ -165,34 +147,8 @@ html, body {
   color: #8c3b4a;
 }
 
-/* --------------------
-   SUBTLE GLOW ANIMATION
---------------------- */
-@keyframes glowPulse {
-  0% { box-shadow: 0 0 10px rgba(255,111,145,0.2); }
-  50% { box-shadow: 0 0 22px rgba(255,111,145,0.4); }
-  100% { box-shadow: 0 0 10px rgba(255,111,145,0.2); }
-}
-
-.progress-wrapper:hover {
-  animation: glowPulse 3s infinite;
-}
-
-/* --------------------
-   MOBILE SAFETY
---------------------- */
 @media (max-width: 768px) {
-
   .main-title {
     font-size: 48px;
   }
-
-  .bg-video {
-    height: 100svh;
-  }
-
-  .video-overlay {
-    height: 100svh;
-  }
-
 }
