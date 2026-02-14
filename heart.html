@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Our Heart ❤️</title>
+<title>Happy Valentine's Day ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -10,40 +10,34 @@ body {
   margin: 0;
   overflow: hidden;
   background: radial-gradient(circle at center, #1a1f3a 0%, #0B132B 80%);
-  font-family: Georgia, serif;
+  font-family: 'Playfair Display', serif;
 }
 
-#overlayText {
+#title {
   position: absolute;
-  bottom: 60px;
+  bottom: 80px;
   width: 100%;
   text-align: center;
-  color: #FF6F91;
-  font-size: 26px;
-  letter-spacing: 1px;
-  opacity: 0;
-  transition: opacity 2s ease;
-}
-
-#fade {
-  position: fixed;
-  inset: 0;
-  background: #0B132B;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1.5s ease;
+  font-size: 42px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, #ff9ecf, #ffd86f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(255, 150, 200, 0.4);
 }
 </style>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div id="overlayText">Click the heart ❤️</div>
-<div id="fade"></div>
+<div id="title">Happy Valentine’s Day 💖</div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.155.0/build/three.module.js';
 
-<script>
-let scene, camera, renderer, heart;
+let scene, camera, renderer, heart, stars;
 
 init();
 animate();
@@ -58,34 +52,35 @@ function init() {
     0.1,
     100
   );
-  camera.position.z = 6;
+  camera.position.z = 8;
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
 
-  // Lights
-  const light = new THREE.PointLight(0xff6f91, 2);
-  light.position.set(5, 5, 5);
-  scene.add(light);
-
-  const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+  // Lighting
+  const ambient = new THREE.AmbientLight(0xffffff, 0.6);
   scene.add(ambient);
 
-  // Heart shape
-  const shape = new THREE.Shape();
-  shape.moveTo(0, 0);
-  shape.bezierCurveTo(0, 2, -2, 2, -2, 0);
-  shape.bezierCurveTo(-2, -2, 0, -3, 0, -4);
-  shape.bezierCurveTo(0, -3, 2, -2, 2, 0);
-  shape.bezierCurveTo(2, 2, 0, 2, 0, 0);
+  const pointLight = new THREE.PointLight(0xff6f91, 2);
+  pointLight.position.set(5, 5, 5);
+  scene.add(pointLight);
 
-  const geometry = new THREE.ExtrudeGeometry(shape, {
-    depth: 0.8,
+  // Smaller heart
+  const heartShape = new THREE.Shape();
+  heartShape.moveTo(0, 0);
+  heartShape.bezierCurveTo(0, 3, -3, 3, -3, 0);
+  heartShape.bezierCurveTo(-3, -3, 0, -4, 0, -6);
+  heartShape.bezierCurveTo(0, -4, 3, -3, 3, 0);
+  heartShape.bezierCurveTo(3, 3, 0, 3, 0, 0);
+
+  const geometry = new THREE.ExtrudeGeometry(heartShape, {
+    depth: 1,
     bevelEnabled: true,
-    bevelThickness: 0.2,
-    bevelSize: 0.2,
-    bevelSegments: 5
+    bevelThickness: 0.3,
+    bevelSize: 0.3,
+    bevelSegments: 8
   });
 
   const material = new THREE.MeshStandardMaterial({
@@ -95,17 +90,38 @@ function init() {
   });
 
   heart = new THREE.Mesh(geometry, material);
+
   heart.rotation.x = Math.PI;
+  heart.rotation.y = Math.PI;   // 180 degree rotation
+  heart.scale.set(0.35, 0.35, 0.35);  // smaller size
+
   scene.add(heart);
 
-  document.getElementById("overlayText").style.opacity = 1;
+  // ⭐ Star field
+  const starGeometry = new THREE.BufferGeometry();
+  const starCount = 1000;
+  const positions = [];
 
-  window.addEventListener("click", () => {
-    document.getElementById("fade").style.opacity = 1;
-    setTimeout(() => {
-      window.location.href = "day14.html";
-    }, 1500);
+  for (let i = 0; i < starCount; i++) {
+    positions.push(
+      (Math.random() - 0.5) * 100,
+      (Math.random() - 0.5) * 100,
+      (Math.random() - 0.5) * 100
+    );
+  }
+
+  starGeometry.setAttribute(
+    'position',
+    new THREE.Float32BufferAttribute(positions, 3)
+  );
+
+  const starMaterial = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.15
   });
+
+  stars = new THREE.Points(starGeometry, starMaterial);
+  scene.add(stars);
 
   window.addEventListener("resize", onResize);
 }
@@ -119,8 +135,10 @@ function onResize() {
 function animate() {
   requestAnimationFrame(animate);
 
-  heart.rotation.y += 0.01;
+  heart.rotation.z += 0.005;
   heart.position.y = Math.sin(Date.now() * 0.002) * 0.2;
+
+  stars.rotation.y += 0.0005;
 
   renderer.render(scene, camera);
 }
