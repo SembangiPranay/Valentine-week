@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Love Across Distance ❤️</title>
+<title>Love Across Distance</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -12,42 +12,61 @@
 <style>
 body{
   margin:0;
-  background:#0B132B;
+  background:radial-gradient(circle at center,#101a3a 0%,#0B132B 60%,#070d1f 100%);
   overflow:hidden;
   font-family:'Quicksand',sans-serif;
   color:white;
 }
 
+#container{
+  position:relative;
+  width:100vw;
+  height:100vh;
+}
+
 #distanceText{
   position:absolute;
-  bottom:40px;
+  bottom:60px;
   width:100%;
   text-align:center;
   font-family:'Playfair Display',serif;
-  font-size:1.6rem;
+  font-size:1.8rem;
   color:#FAD961;
   opacity:0;
   transition:opacity 2s ease;
 }
 
+svg{
+  width:100%;
+  height:100%;
+}
+
+/* Glow Filters */
 .city{
   fill:#FF6F91;
-  filter:drop-shadow(0 0 15px #FF6F91);
+  filter:url(#cityGlow);
 }
 
 .arc{
   fill:none;
   stroke:#FF6F91;
   stroke-width:3;
-  filter:drop-shadow(0 0 10px #FF6F91);
+  filter:url(#lineGlow);
+}
+
+#particle{
+  fill:#FAD961;
+  filter:url(#particleGlow);
 }
 </style>
 </head>
 
 <body>
 
-<svg id="map"></svg>
-<div id="distanceText"></div>
+<div id="container">
+  <svg id="map"></svg>
+  <div id="distanceText"></div>
+</div>
 
 <script>
 
@@ -59,107 +78,141 @@ const svg = d3.select("#map")
   .attr("width", width)
   .attr("height", height);
 
+// Define glow filters
+const defs = svg.append("defs");
+
+defs.append("filter")
+  .attr("id","cityGlow")
+  .append("feGaussianBlur")
+  .attr("stdDeviation","6")
+  .attr("result","coloredBlur");
+
+defs.append("filter")
+  .attr("id","lineGlow")
+  .append("feGaussianBlur")
+  .attr("stdDeviation","4");
+
+defs.append("filter")
+  .attr("id","particleGlow")
+  .append("feGaussianBlur")
+  .attr("stdDeviation","8");
+
 // Projection
 const projection = d3.geoMercator()
   .center([82,22])
-  .scale(width*2)
+  .scale(width*2.2)
   .translate([width/2, height/2]);
 
 const path = d3.geoPath().projection(projection);
 
-// Load India GeoJSON
-d3.json("https://raw.githubusercontent.com/deldersveld/topojson/master/countries/india/india-states.json")
-  .then(data => {
+// Embedded simplified India GeoJSON
+const india = {
+"type":"Feature",
+"geometry":{
+"type":"Polygon",
+"coordinates":[[
+[68,8],[97,8],[97,37],[68,37],[68,8]
+]]
+}
+};
 
-    const geo = topojson.feature(data, data.objects.IND_adm1);
-
-    svg.append("g")
-      .selectAll("path")
-      .data(geo.features)
-      .enter()
-      .append("path")
-      .attr("d", path)
-      .attr("fill", "#1c2541")
-      .attr("stroke", "#3a506b")
-      .attr("stroke-width", 0.5);
-
-    drawConnection();
-  });
+svg.append("path")
+  .datum(india)
+  .attr("d", path)
+  .attr("fill","#1c2541")
+  .attr("stroke","#3a506b")
+  .attr("stroke-width",1);
 
 // Coordinates
 const vizag = [83.2185,17.6868];
 const nagpur = [79.0882,21.1458];
 
-function drawConnection(){
+// Convert to screen coords
+const vizagXY = projection(vizag);
+const nagpurXY = projection(nagpur);
 
-  const line = {
-    type: "LineString",
-    coordinates: [vizag, nagpur]
-  };
+// Draw curved arc
+const arcPath = svg.append("path")
+  .attr("class","arc")
+  .attr("d", `
+    M${vizagXY[0]},${vizagXY[1]}
+    Q${(vizagXY[0]+nagpurXY[0])/2},${vizagXY[1]-120}
+    ${nagpurXY[0]},${nagpurXY[1]}
+  `);
 
-  const arcPath = svg.append("path")
-    .datum(line)
-    .attr("class","arc")
-    .attr("d", path);
+// Animate line drawing
+const totalLength = arcPath.node().getTotalLength();
+arcPath
+  .attr("stroke-dasharray", totalLength)
+  .attr("stroke-dashoffset", totalLength)
+  .transition()
+  .duration(3000)
+  .ease(d3.easeCubic)
+  .attr("stroke-dashoffset",0);
 
-  // Animate draw
-  const totalLength = arcPath.node().getTotalLength();
-  arcPath
-    .attr("stroke-dasharray", totalLength)
-    .attr("stroke-dashoffset", totalLength)
-    .transition()
-    .duration(3000)
-    .ease(d3.easeCubic)
-    .attr("stroke-dashoffset", 0);
+// Cities
+svg.append("circle")
+  .attr("class","city")
+  .attr("cx",vizagXY[0])
+  .attr("cy",vizagXY[1])
+  .attr("r",10);
 
-  // Cities
-  [vizag, nagpur].forEach(coord=>{
-    const [x,y] = projection(coord);
-    svg.append("circle")
-      .attr("class","city")
-      .attr("cx",x)
-      .attr("cy",y)
-      .attr("r",8);
-  });
-
-  animateParticle(arcPath);
-
-  setTimeout(()=>{
-    document.getElementById("distanceText").innerHTML =
-      "Distance means nothing when hearts stay connected.<br>~700 km apart, but always close.";
-    document.getElementById("distanceText").style.opacity=1;
-  },3500);
-}
+svg.append("circle")
+  .attr("class","city")
+  .attr("cx",nagpurXY[0])
+  .attr("cy",nagpurXY[1])
+  .attr("r",10);
 
 // Traveling particle
-function animateParticle(pathElement){
-  const length = pathElement.node().getTotalLength();
+const particle = svg.append("circle")
+  .attr("id","particle")
+  .attr("r",6);
 
-  const particle = svg.append("circle")
-    .attr("r",6)
-    .attr("fill","#FAD961")
-    .attr("filter","drop-shadow(0 0 15px #FAD961)");
+function animateParticle(){
+  let t=0;
+  function move(){
+    const x = (1-t)*(1-t)*vizagXY[0] +
+              2*(1-t)*t*((vizagXY[0]+nagpurXY[0])/2) +
+              t*t*nagpurXY[0];
 
-  function repeat(){
-    particle
-      .transition()
-      .duration(4000)
-      .ease(d3.easeLinear)
-      .attrTween("transform", function(){
-        return function(t){
-          const point = pathElement.node().getPointAtLength(t*length);
-          return `translate(${point.x},${point.y})`;
-        }
-      })
-      .on("end", repeat);
+    const y = (1-t)*(1-t)*vizagXY[1] +
+              2*(1-t)*t*(vizagXY[1]-120) +
+              t*t*nagpurXY[1];
+
+    particle.attr("cx",x).attr("cy",y);
+
+    t+=0.01;
+    if(t>1) t=0;
+    requestAnimationFrame(move);
   }
-
-  repeat();
+  move();
 }
 
-</script>
+animateParticle();
 
-<script src="https://unpkg.com/topojson@3"></script>
+// Animated distance counter
+function animateDistance(){
+  const target = 700;
+  let current = 0;
+  const text = document.getElementById("distanceText");
+
+  const counter = setInterval(()=>{
+    current+=10;
+    if(current>=target){
+      current=target;
+      clearInterval(counter);
+    }
+    text.innerHTML=
+      "Distance means nothing when hearts stay connected.<br>~"
+      +current+" km apart, but always close.";
+  },20);
+
+  text.style.opacity=1;
+}
+
+setTimeout(animateDistance,3500);
+
+</script>
 
 </body>
 </html>
